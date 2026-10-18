@@ -1,0 +1,1517 @@
+/* ==========================================================================
+   INTELLIGENT BATTERY CELL 4.0 HACKATHON 2026
+   Design System & Master Stylesheet — Replicating Applied Imagination
+   ========================================================================== */
+
+/* --- 1. Authentic Web Fonts --- */
+@font-face {
+  font-family: 'fsKim';
+  src: url('/_next/static/immutable/media/fs_kim_regular-s.p.2zjpgvh-rqsif.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'gtAmerica';
+  src: url('/_next/static/immutable/media/gt_america_standard_regular-s.p.2y2s6tto88taz.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'gtAmerica';
+  src: url('/_next/static/immutable/media/gt_america_standard_medium-s.p.3t_zqiukyzuim.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'gtAmericaMono';
+  src: url('/_next/static/immutable/media/gt_america_mono_medium-s.p.0llyz73tpd9js.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- 2. CSS Custom Properties --- */
+:root {
+  /* Paper & Editorial Palette */
+  --color-canvas: #faf5ee;
+  --color-surface: #efe7dd;
+  --color-border: #d9d1c8;
+
+  --color-neutral-100: #faf5ee;
+  --color-neutral-200: #efe7dd;
+  --color-neutral-300: #d9d1c8;
+  --color-neutral-400: #4d4a47;
+  --color-neutral-500: #232424;
+
+  --color-ink: var(--color-neutral-500);
+  --color-ink-muted: var(--color-neutral-400);
+
+  /* Vivid Accents */
+  --color-red: #f94e2a;
+  --color-orange: #f66f00;
+  --color-yellow: #ffc013;
+  --color-light-yellow: #feec97;
+  --color-purple: #9b338f;
+  --color-sky-blue: #8cb8d1;
+
+  /* Typography Stacks */
+  --font-serif: 'fsKim', Georgia, serif;
+  --font-sans: 'gtAmerica', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'gtAmericaMono', "SF Mono", Monaco, "Courier New", monospace;
+
+  /* Dynamic Altitude & Scroll Variables */
+  --altitude-remaining: 1;
+  --brand-mark-hue: var(--color-red);
+  --curtain-out: 0;
+  --container-max: 108rem;
+  --container-lg: 105em;
+  --container-reading: 48rem;
+
+  /* Interactive probability state variables */
+  --probability-fill-0: 0;
+  --probability-fill-1: 0;
+  --probability-fill-2: 0;
+  --probability-fill-3: 0;
+  --chart-draw-0: 0;
+  --chart-draw-1: 0;
+  --chart-draw-2: 0;
+}
+
+/* --- 3. Base Reset & Document Setup --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  overflow-x: hidden;
+}
+
+/* Custom Selection */
+::selection {
+  background: var(--color-yellow);
+  color: var(--color-neutral-500);
+}
+
+/* Preloader Curtain */
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--color-canvas);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 3D Canvas Rig */
+.canvas-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.flight-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.flight-canvas--background {
+  z-index: 1;
+}
+
+.flight-canvas--foreground {
+  z-index: 20;
+}
+
+/* Master Page Shell */
+.page-shell {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 0;
+  overflow-x: hidden;
+}
+
+/* --- 4. Altitude & Telemetry HUD --- */
+.altitude-hud {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 50;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  user-select: none;
+  transition: opacity 0.5s ease;
+}
+
+@media (max-width: 900px) {
+  .altitude-hud {
+    right: 1rem;
+    top: auto;
+    bottom: 1.5rem;
+    transform: none;
+    background: rgba(250, 245, 238, 0.88);
+    backdrop-filter: blur(8px);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+}
+
+.altitude-hud__track {
+  width: 3px;
+  height: 140px;
+  background: rgba(35, 36, 36, 0.12);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.altitude-hud__track span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--altitude-remaining, 1) * 100%);
+  background: var(--color-red);
+  transition: height 0.08s linear;
+}
+
+.altitude-hud__readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.altitude-hud__label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+}
+
+.altitude-hud__value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  min-width: 6.5rem;
+  display: inline-block;
+}
+
+.altitude-hud__battery-gauge {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--color-red);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* --- 5. Masthead (Hero Header) --- */
+.masthead {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 4rem 4rem;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .masthead {
+    padding: 2rem 1.5rem 3rem;
+  }
+}
+
+.masthead__frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 85vh;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.masthead__nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.masthead__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--brand-mark-hue, var(--color-red));
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+
+.masthead__brand:hover {
+  transform: scale(1.04);
+}
+
+.masthead__brand svg {
+  width: 72px;
+  height: auto;
+}
+
+.masthead__brand-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  border-left: 1px solid var(--color-border);
+  padding-left: 0.8rem;
+}
+
+.masthead__action-btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.55rem 1.2rem;
+  background: transparent;
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+  text-decoration: none;
+  cursor: pointer;
+  clip-path: polygon(4% 0%, 100% 0%, 96% 100%, 0% 100%);
+  transition: all 0.2s ease;
+}
+
+.masthead__action-btn:hover {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+.masthead__content {
+  margin: 4rem 0 2rem;
+  max-width: 62rem;
+}
+
+.masthead__badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.masthead__badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  color: var(--color-ink);
+}
+
+.masthead__badge--live {
+  background: #feec97;
+  border-color: #ffc013;
+  color: #232424;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.masthead__badge--live::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-red);
+  display: inline-block;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.masthead__title-semantic {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 7.8vw, 7.5rem);
+  line-height: 0.94;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  color: var(--color-neutral-500);
+  margin-bottom: 2rem;
+}
+
+.masthead__title-semantic span {
+  display: block;
+}
+
+.masthead__title-semantic em {
+  font-style: italic;
+  color: var(--color-red);
+}
+
+.masthead__dek {
+  font-family: var(--font-sans);
+  font-size: clamp(1.2rem, 2.2vw, 1.85rem);
+  line-height: 1.45;
+  color: var(--color-ink-muted);
+  max-width: 48rem;
+  font-weight: 400;
+}
+
+.masthead__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.8rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.masthead__meta {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Scroll Cue with Rolling Letters */
+.scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-ink);
+}
+
+.scroll-cue__word {
+  display: inline-flex;
+  overflow: hidden;
+  height: 1.2em;
+}
+
+.scroll-cue__letter {
+  display: inline-block;
+  animation: scroll-cue-roll 2.8s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+
+@keyframes scroll-cue-roll {
+  0%, 62% { transform: translateY(0); }
+  78% { transform: translateY(-120%); }
+  79% { transform: translateY(120%); }
+  100% { transform: translateY(0); }
+}
+
+/* --- 6. Progressive Word-by-Word Scroll Reveal --- */
+.article-intro {
+  padding: 8rem 2rem 6rem;
+  max-width: var(--container-reading);
+  margin: 0 auto;
+}
+
+.article-intro__lead {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  line-height: 1.35;
+  color: var(--color-neutral-500);
+  margin-bottom: 2.8rem;
+}
+
+.article-block {
+  padding: 5rem 2rem;
+  max-width: var(--container-reading);
+  margin: 0 auto;
+}
+
+.article-block p {
+  font-size: 1.2rem;
+  line-height: 1.75;
+  color: var(--color-neutral-400);
+  margin-bottom: 2rem;
+}
+
+.article-block p strong {
+  color: var(--color-neutral-500);
+}
+
+.article-block__chapter-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 1.2rem;
+  display: inline-block;
+}
+
+.article-block__chapter-label--yellow {
+  color: var(--color-orange);
+}
+
+.article-block__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1.1;
+  color: var(--color-neutral-500);
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.scroll-reveal-word {
+  display: inline;
+  transition: opacity 0.1s linear, filter 0.1s linear;
+  will-change: opacity, filter;
+}
+
+/* --- 7. Statement Section (Cut-Corner Tags & Cloud Text) --- */
+.statement {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin: 4rem 0;
+}
+
+.statement__sticky {
+  max-width: 68rem;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.statement__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+  line-height: 1.15;
+  color: var(--color-neutral-500);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.statement__tags-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.statement__tag {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.65rem 1.6rem;
+  font-weight: 500;
+  cursor: default;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  position: relative;
+}
+
+.statement__tag:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.statement__tag--cost {
+  background: var(--color-red);
+  color: var(--color-neutral-100);
+  clip-path: polygon(1% 7%, 99% 0%, 100% 93%, 2% 100%);
+  animation: statement-tag-cut 8s infinite alternate ease-in-out;
+}
+
+.statement__tag--effort {
+  background: var(--color-yellow);
+  color: var(--color-neutral-500);
+  clip-path: polygon(0% 0%, 98% 8%, 100% 100%, 3% 92%);
+}
+
+.statement__tag--tech {
+  background: var(--color-purple);
+  color: var(--color-neutral-100);
+  clip-path: polygon(2% 4%, 97% 0%, 100% 96%, 0% 100%);
+}
+
+@keyframes statement-tag-cut {
+  0% { clip-path: polygon(1% 7%, 99% 0%, 100% 93%, 2% 100%); }
+  50% { clip-path: polygon(0% 2%, 100% 8%, 98% 100%, 3% 94%); }
+  100% { clip-path: polygon(2% 9%, 97% 2%, 99% 91%, 0% 98%); }
+}
+
+/* --- 8. Battery Evolution SVG Line Chart --- */
+.imagination-chart {
+  margin: 4rem auto;
+  max-width: 64rem;
+  padding: 2.5rem;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 24px rgba(35, 36, 36, 0.04);
+  position: relative;
+}
+
+.imagination-chart__header {
+  margin-bottom: 2rem;
+}
+
+.imagination-chart__title {
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.4rem;
+}
+
+.imagination-chart__subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+}
+
+.imagination-chart__plot {
+  position: relative;
+  width: 100%;
+}
+
+.imagination-chart__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.imagination-chart__grid line {
+  stroke: rgba(217, 209, 200, 0.6);
+  stroke-width: 1;
+}
+
+.imagination-chart__axis line {
+  stroke: var(--color-neutral-500);
+  stroke-width: 1.5;
+}
+
+.imagination-chart__ticks text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--color-ink-muted);
+}
+
+.imagination-chart__line {
+  fill: none;
+  stroke: var(--line-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--line-draw, 1));
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.imagination-chart__legend {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.imagination-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-ink);
+}
+
+.imagination-chart__legend-box {
+  width: 12px;
+  height: 12px;
+  background: var(--line-accent);
+  border-radius: 2px;
+}
+
+.imagination-chart__caption {
+  margin-top: 1.2rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+/* --- 9. Interactive Probability / Problem Simulator --- */
+.probability {
+  padding: 6rem 2rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.probability__inner {
+  max-width: 58rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.probability__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-red);
+  margin-bottom: 1rem;
+}
+
+.probability__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.4vw, 3.8rem);
+  color: var(--color-neutral-500);
+  margin-bottom: 2.8rem;
+  font-weight: 400;
+}
+
+.probability__candidates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  list-style: none;
+  margin-bottom: 2.5rem;
+}
+
+.probability__candidate {
+  position: relative;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  padding: 1.4rem 1.2rem;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+  text-align: left;
+  border-radius: 2px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.probability__candidate:hover,
+.probability__candidate.is-active {
+  transform: translateY(-4px);
+  border-color: var(--color-ink);
+}
+
+.probability__candidate-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: var(--cand-color, var(--color-red));
+  width: calc(var(--cand-fill, 0) * 100%);
+  transition: width 0.4s ease;
+}
+
+.probability__candidate-word {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--color-neutral-500);
+  font-weight: 500;
+  z-index: 2;
+}
+
+.probability__candidate-desc {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.4rem;
+  z-index: 2;
+}
+
+.probability__candidate-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--cand-color, var(--color-ink));
+  margin-top: 0.8rem;
+  z-index: 2;
+}
+
+.probability__takeaway {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+/* --- 10. Prompt-Split Stage (Group 1 vs Group 2) --- */
+.prompt-split {
+  padding: 6rem 2rem;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.prompt-split__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.prompt-split__column {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(35, 36, 36, 0.03);
+}
+
+.prompt-split__label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  width: fit-content;
+}
+
+.prompt-split__label--one {
+  background: var(--color-yellow);
+  color: var(--color-neutral-500);
+}
+
+.prompt-split__label--two {
+  background: var(--color-purple);
+  color: var(--color-neutral-100);
+}
+
+.prompt-split__font-source {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--color-neutral-500);
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.prompt-split__paper-stage {
+  position: relative;
+  min-height: 280px;
+  background: #fdfbf7;
+  border: 1px dashed var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.prompt-split__sketch-img {
+  max-width: 180px;
+  max-height: 180px;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.prompt-split__sketch-img.is-crumpled {
+  transform: scale(0.6) rotate(14deg);
+  filter: contrast(1.5) blur(1px);
+}
+
+.prompt-split__tool-badge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.prompt-split__tool-badge:hover {
+  background: var(--color-border);
+}
+
+/* --- 11. Hackathon Themes Grid --- */
+.themes-section {
+  padding: 6rem 2rem;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.themes-section__intro {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto 4rem;
+}
+
+.themes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.8rem;
+}
+
+.theme-card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  padding: 2.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+.theme-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-ink);
+  box-shadow: 0 12px 32px rgba(35, 36, 36, 0.08);
+}
+
+.theme-card__idx {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-red);
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+}
+
+.theme-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  line-height: 1.25;
+  color: var(--color-neutral-500);
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.theme-card__desc {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+
+.theme-card__tag {
+  margin-top: 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.6rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  width: fit-content;
+}
+
+/* --- 12. Loewy & MAYA Spectrum Slider --- */
+.loewy-maya {
+  padding: 6rem 2rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.loewy-maya__inner {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.loewy-maya__copy {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.loewy-maya__label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+  margin-bottom: 1rem;
+}
+
+.loewy-maya__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  line-height: 1.1;
+  color: var(--color-neutral-500);
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.loewy-maya__heading span {
+  display: block;
+}
+
+.loewy-maya__heading em {
+  font-style: italic;
+  color: var(--color-orange);
+}
+
+.loewy-maya__dek {
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  color: var(--color-ink-muted);
+}
+
+/* Maya Interactive Range Slider */
+.maya-spectrum {
+  position: relative;
+  margin-top: 3rem;
+  padding: 3rem 2rem;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  overflow: visible;
+}
+
+.maya-spectrum__heading {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-neutral-500);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.maya-spectrum__labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.maya-spectrum__label--familiar {
+  color: var(--color-ink-muted);
+}
+
+.maya-spectrum__label--radical {
+  color: var(--color-red);
+}
+
+.maya-spectrum__control {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.maya-spectrum__range {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  background: var(--color-border);
+  outline: none;
+  border-radius: 4px;
+  cursor: ew-resize;
+}
+
+.maya-spectrum__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  background: var(--color-red);
+  border: 2px solid var(--color-canvas);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(35, 36, 36, 0.25);
+  cursor: grab;
+}
+
+/* Flying Artifacts Stage */
+.maya-spectrum__stage {
+  position: relative;
+  min-height: 240px;
+  border-top: 1px dashed var(--color-border);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.maya-spawn-card {
+  width: 140px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  padding: 0.5rem;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(35, 36, 36, 0.1);
+  animation: maya-spectrum-object-fall 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: transform 0.2s ease;
+  clip-path: polygon(2% 7%, 92% 0%, 100% 14%, 96% 94%, 12% 100%, 0% 82%);
+}
+
+.maya-spawn-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  margin-bottom: 0.35rem;
+}
+
+.maya-spawn-card span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  display: block;
+  color: var(--color-neutral-500);
+}
+
+@keyframes maya-spectrum-object-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) rotate(-10deg) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+/* --- 13. Important Dates & Timeline --- */
+.timeline-section {
+  padding: 6rem 2rem;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3.5rem;
+}
+
+.timeline-card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  padding: 2.5rem 2rem;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+}
+
+.timeline-card__phase {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-red);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
+}
+
+.timeline-card__date {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.8rem;
+  font-weight: 400;
+}
+
+.timeline-card__desc {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+
+/* --- 14. Registration Fees & Benefits --- */
+.fees-section {
+  padding: 6rem 2rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: var(--container-max);
+  margin: 3.5rem auto 0;
+}
+
+.fee-card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.2s ease;
+}
+
+.fee-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-ink);
+}
+
+.fee-card--highlight {
+  border-color: var(--color-red);
+  box-shadow: 0 10px 30px rgba(249, 78, 42, 0.12);
+}
+
+.fee-card__tier {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-ink-muted);
+  margin-bottom: 1.2rem;
+}
+
+.fee-card__amount {
+  font-family: var(--font-serif);
+  font-size: 3.2rem;
+  color: var(--color-neutral-500);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.fee-card__desc {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  margin-bottom: 2rem;
+}
+
+.benefits-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: var(--container-max);
+  margin: 4rem auto 0;
+}
+
+.benefit-card {
+  padding: 2rem;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+}
+
+.benefit-card__icon {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.6rem;
+}
+
+.benefit-card__desc {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+}
+
+/* --- 15. Ground Approach & Registration Form --- */
+.ground {
+  position: relative;
+  padding: 8rem 2rem 6rem;
+  background: var(--color-canvas);
+  overflow: hidden;
+}
+
+.ground__contact {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.ground-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 4rem 3.5rem;
+  box-shadow: 0 16px 40px rgba(35, 36, 36, 0.06);
+}
+
+@media (max-width: 600px) {
+  .ground-form {
+    padding: 2.5rem 1.8rem;
+  }
+}
+
+.ground-form__lede {
+  margin-bottom: 2.5rem;
+}
+
+.ground-form__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.15;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.8rem;
+  font-weight: 400;
+}
+
+.ground-form__intro {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  color: var(--color-ink-muted);
+}
+
+.ground-form__field {
+  margin-bottom: 1.8rem;
+}
+
+.ground-form__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink);
+  margin-bottom: 0.6rem;
+}
+
+.ground-form__input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ground-form__input:focus {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(35, 36, 36, 0.08);
+}
+
+.ground-form__input--select {
+  cursor: pointer;
+}
+
+/* Cut Button (Tactile 3D Paper Physics) */
+.cut-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem 2.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  color: var(--color-neutral-100);
+  background: var(--color-red);
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.cut-button:hover {
+  background: var(--color-orange);
+  transform: translateY(-2px);
+}
+
+.cut-button:active {
+  transform: translateY(1px);
+}
+
+.ground-form__success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 2.5rem;
+  text-align: center;
+  animation: ground-form-success-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ground-form-success-in {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(0.75rem);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.ground-form__success h3 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: #166534;
+  margin-bottom: 0.5rem;
+}
+
+.ground-form__success p {
+  font-family: var(--font-sans);
+  color: #15803d;
+}
+
+/* Substack Aside / Bio */
+.substack {
+  max-width: 48rem;
+  margin: 5rem auto 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.substack__portrait img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+}
+
+.substack__copy-wrap {
+  flex: 1;
+  min-width: 240px;
+}
+
+.substack__name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-red);
+  margin-bottom: 0.4rem;
+}
+
+.substack__heading {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: var(--color-neutral-500);
+  margin-bottom: 0.5rem;
+}
+
+.substack__copy {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+}
+
+/* Footer */
+.ground__footer {
+  margin-top: 6rem;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.ground__maker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--color-ink-muted);
+}
+
+.ground__maker img {
+  width: 20px;
+  height: auto;
+}
+
+.ground__copyright {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.ground__privacy {
+  color: inherit;
+  text-decoration: underline;
+}

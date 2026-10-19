@@ -23,20 +23,17 @@ const FEE_TIERS = [
     tier: 'STUDENTS & SCHOLARS',
     fee: '₹500',
     desc: 'Enrolled undergraduate, postgraduate, and PhD scholars from accredited academic institutions.',
-    badge: 'Subsidized Academic Rate'
   },
   {
     tier: 'STUDENT START-UPS',
     fee: '₹1,500',
     desc: 'Early-stage venture teams founded and driven by currently enrolled university students.',
-    badge: 'Popular Tier',
     highlight: true
   },
   {
     tier: 'MSMEs & REGISTERED ENTITIES',
     fee: '₹2,000',
     desc: 'Registered micro, small, and medium enterprises, spin-offs, and commercial technology companies.',
-    badge: 'Enterprise Tier'
   }
 ];
 
@@ -48,7 +45,7 @@ export default function PrizesAndFees() {
           03 / Value & Investment
         </p>
         <h2 className="article-block__heading">Prizes, Incubation & Registration Tiers</h2>
-        <p style={{ color: 'var(--color-ink-muted)', fontSize: '1.1rem' }}>
+        <p style={{ color: 'var(--color-ink-muted)', fontSize: '1.05rem', lineHeight: 1.5, fontFamily: 'var(--font-body)' }}>
           Transparent fee structure dedicated to fueling world-class jury evaluation, compute grants, and cash prize distribution.
         </p>
       </div>
@@ -76,8 +73,9 @@ export default function PrizesAndFees() {
               <div className="fee-card__amount">{tier.fee}</div>
               <p className="fee-card__desc">{tier.desc}</p>
             </div>
-            <a href="#register" className="cut-button" style={{ textDecoration: 'none' }}>
-              Select & Register
+            <a href="#register" className="cut-button" style={{ textDecoration: 'none', width: 'auto', alignSelf: 'flex-start' }}>
+              <span className="cut-button__box" style={{ '--cut-fill': tier.highlight ? 'var(--color-red)' : 'var(--color-yellow)' }} />
+              <span className="cut-button__label" style={{ color: tier.highlight ? 'var(--color-neutral-100)' : 'var(--color-ink)' }}>Select & Register</span>
             </a>
           </div>
         ))}

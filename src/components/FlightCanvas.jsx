@@ -1,234 +1,284 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-/**
- * Three.js 3D WebGL Flight Canvas with Procedural Halftone Cloud Shader
- * Replicating Applied Imagination's dual flight canvas architecture
- */
-export default function FlightCanvas({ scrollProgress = 0 }) {
-  const containerRef = useRef(null);
+const cloudVertexShader = `
+varying vec2 vUv;
+varying vec3 vVariation;
+varying float vTreatment;
+varying float vWorldY;
+
+attribute vec3 aVariation;
+attribute float aTreatment;
+
+void main() {
+  vUv = uv;
+  vVariation = aVariation;
+  vTreatment = aTreatment;
+  vec4 worldPos = modelMatrix * vec4(position, 1.0);
+  vWorldY = worldPos.y;
+  gl_Position = projectionMatrix * viewMatrix * worldPos;
+}
+`;
+
+const cloudFragmentShader = `
+precision highp float;
+
+uniform sampler2D uTexture;
+uniform vec3 uTint;
+uniform float uOpacity;
+uniform float uDotStrength;
+uniform float uDotSize;
+uniform float uTime;
+uniform float uGroundY;
+uniform float uGroundFade;
+
+varying vec2 vUv;
+varying vec3 vVariation;
+varying float vTreatment;
+varying float vWorldY;
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+  vec2 cell = floor(p);
+  vec2 local = fract(p);
+  local = local * local * (3.0 - 2.0 * local);
+  float a = hash(cell);
+  float b = hash(cell + vec2(1.0, 0.0));
+  float c = hash(cell + vec2(0.0, 1.0));
+  float d = hash(cell + vec2(1.0, 1.0));
+  return mix(mix(a, b, local.x), mix(c, d, local.x), local.y);
+}
+
+void main() {
+  vec4 sampleColor = texture2D(uTexture, vUv);
+  if (sampleColor.a < 0.01) discard;
+
+  float edgeNoise = noise(vUv * vec2(42.0, 22.0) + vec2(uTime * 0.04, uTime * -0.015));
+  float edgeThreshold = mix(0.03, 0.12, edgeNoise);
+  float alpha = smoothstep(edgeThreshold, 0.44, sampleColor.a);
+
+  float luminance = dot(sampleColor.rgb, vec3(0.299, 0.587, 0.114));
+  float edgeLight = smoothstep(0.08, 0.45, luminance + sampleColor.a * 0.2);
+  alpha *= mix(0.65, 1.0, edgeLight);
+
+  float posterized = floor(clamp(luminance, 0.0, 1.0) * 5.0 + 0.5) / 5.0;
+  float vaporLight = smoothstep(0.02, 0.96, posterized);
+  vec3 normalized = mix(vec3(0.78, 0.85, 0.90), vec3(1.0), vaporLight);
+
+  // Applied Imagination halftone dot cell algorithm
+  float dotSize = uDotSize * mix(0.85, 1.25, vVariation.z);
+  vec2 dotCell = mod(gl_FragCoord.xy, dotSize) - dotSize * 0.5;
+  float darkness = 1.0 - posterized;
+  float dotRadius = dotSize * mix(0.08, 0.42, smoothstep(0.04, 0.85, darkness));
+  float dotShape = 1.0 - smoothstep(max(0.0, dotRadius - 0.7), dotRadius + 0.7, length(dotCell));
+
+  vec3 dotInk = mix(normalized * 0.55, vec3(1.0), vTreatment);
+  normalized = mix(normalized, dotInk, dotShape * uDotStrength);
+  alpha *= mix(0.85, 1.0, dotShape * uDotStrength * 0.5);
+  alpha *= uOpacity * mix(0.7, 1.0, vVariation.x);
+  alpha *= smoothstep(uGroundY, uGroundY + uGroundFade, vWorldY);
+
+  if (alpha < 0.02) discard;
+  gl_FragColor = vec4(normalized, alpha);
+}
+`;
+
+export default function FlightCanvas() {
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    // 1. Scene & Camera Setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x8cb8d1); // #8cb8d1 Sky Blue
+    let renderer, scene, camera, animFrame;
+    let cloudPlanes = [];
+    let matA, matB;
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 18, 18);
-    camera.lookAt(0, 18, 0);
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // 2. Renderer
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
-    container.appendChild(renderer.domElement);
+      scene = new THREE.Scene();
 
-    // 3. Texture Loader
-    const textureLoader = new THREE.TextureLoader();
-    
-    // Cloud Shader Material
-    const cloudVertexShader = `
-      varying vec2 vUv;
-      varying vec3 vVariation;
-      varying float vWorldY;
+      camera = new THREE.PerspectiveCamera(
+        48,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 15, 35);
+      camera.lookAt(0, 5, -50);
 
-      attribute vec3 aVariation;
+      // Texture loader for authentic cloud bank cutouts
+      const loader = new THREE.TextureLoader();
+      const textureA = loader.load('/brand/gpc/clouds/cloud-bank-a.png');
+      const textureB = loader.load('/brand/gpc/clouds/cloud-bank-b.png');
+      const groundTexture = loader.load('/brand/gpc/flight/mountain-ground-cutout.png');
 
-      void main() {
-        vUv = uv;
-        vVariation = aVariation;
-        vec4 worldPos = modelMatrix * vec4(position, 1.0);
-        vWorldY = worldPos.y;
-        gl_Position = projectionMatrix * viewMatrix * worldPos;
-      }
-    `;
+      textureA.wrapS = textureA.wrapT = THREE.ClampToEdgeWrapping;
+      textureB.wrapS = textureB.wrapT = THREE.ClampToEdgeWrapping;
 
-    const cloudFragmentShader = `
-      uniform sampler2D uTexture;
-      uniform float uTime;
-      uniform float uOpacity;
-      uniform float uDotSize;
-      uniform float uDotStrength;
+      const baseUniforms = {
+        uTint: { value: new THREE.Color('#faf5ee') },
+        uOpacity: { value: 0.95 },
+        uDotStrength: { value: 0.75 },
+        uDotSize: { value: 5.5 },
+        uTime: { value: 0 },
+        uGroundY: { value: -120.0 },
+        uGroundFade: { value: 45.0 }
+      };
 
-      varying vec2 vUv;
-      varying vec3 vVariation;
-      varying float vWorldY;
+      // Create Cloud Bank Materials
+      const createCloudMaterial = (texture) => {
+        return new THREE.ShaderMaterial({
+          vertexShader: cloudVertexShader,
+          fragmentShader: cloudFragmentShader,
+          uniforms: {
+            ...baseUniforms,
+            uTexture: { value: texture }
+          },
+          transparent: true,
+          depthWrite: false,
+          side: THREE.DoubleSide
+        });
+      };
 
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-      }
+      matA = createCloudMaterial(textureA);
+      matB = createCloudMaterial(textureB);
 
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
-        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-      }
+      // Cloud strata distribution across 3D flight corridor
+      const cloudConfigs = [
+        // High altitude strata (Hero / intro)
+        { x: -35, y: 18, z: -25, scale: 65, mat: matA, speed: 0.008 },
+        { x: 38, y: 14, z: -35, scale: 75, mat: matB, speed: -0.006 },
+        { x: -10, y: 22, z: -55, scale: 85, mat: matA, speed: 0.005 },
+        { x: 45, y: 6, z: -70, scale: 95, mat: matB, speed: -0.007 },
 
-      void main() {
-        vec4 tex = texture2D(uTexture, vUv);
-        if (tex.a < 0.02) discard;
+        // Mid altitude strata (Manifesto, Statement, Themes)
+        { x: -40, y: -5, z: -40, scale: 70, mat: matB, speed: 0.009 },
+        { x: 25, y: -12, z: -50, scale: 80, mat: matA, speed: -0.005 },
+        { x: -30, y: -22, z: -65, scale: 90, mat: matA, speed: 0.006 },
+        { x: 35, y: -30, z: -60, scale: 85, mat: matB, speed: -0.008 },
 
-        // Animated subtle wisp edge erosion
-        float edgeNoise = noise(vUv * vec2(32.0, 18.0) + vec2(uTime * 0.03, uTime * -0.01));
-        float alpha = smoothstep(0.05 + edgeNoise * 0.08, 0.48, tex.a);
+        // Lower altitude strata (Architecture, MAYA, Timeline)
+        { x: -20, y: -45, z: -45, scale: 80, mat: matB, speed: 0.007 },
+        { x: 30, y: -55, z: -55, scale: 90, mat: matA, speed: -0.006 },
+        { x: -35, y: -68, z: -70, scale: 95, mat: matA, speed: 0.005 },
+        { x: 20, y: -80, z: -65, scale: 85, mat: matB, speed: -0.008 }
+      ];
 
-        // Posterize into paper tones
-        float lum = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
-        float posterized = floor(clamp(lum, 0.0, 1.0) * 5.0 + 0.5) / 5.0;
+      cloudConfigs.forEach((cfg) => {
+        const geo = new THREE.PlaneGeometry(cfg.scale, cfg.scale * 0.55);
 
-        vec3 cloudColor = mix(vec3(0.85, 0.90, 0.94), vec3(1.0), posterized);
+        // Add variation attributes for unique halftone sizes
+        const count = geo.attributes.position.count;
+        const variations = new Float32Array(count * 3);
+        const treatments = new Float32Array(count);
+        const randX = Math.random();
+        const randY = Math.random();
+        const randZ = Math.random();
+        const randTreatment = Math.random() > 0.4 ? 1.0 : 0.0;
 
-        // Procedural screen halftone dots
-        float dotSize = uDotSize * mix(0.9, 1.2, vVariation.z);
-        vec2 dotCell = mod(gl_FragCoord.xy, dotSize) - dotSize * 0.5;
-        float dotRadius = dotSize * mix(0.08, 0.35, 1.0 - posterized);
-        float dotShape = 1.0 - smoothstep(max(0.0, dotRadius - 0.7), dotRadius + 0.7, length(dotCell));
+        for (let i = 0; i < count; i++) {
+          variations[i * 3] = randX;
+          variations[i * 3 + 1] = randY;
+          variations[i * 3 + 2] = randZ;
+          treatments[i] = randTreatment;
+        }
 
-        cloudColor = mix(cloudColor, cloudColor * 0.65, dotShape * uDotStrength);
+        geo.setAttribute('aVariation', new THREE.BufferAttribute(variations, 3));
+        geo.setAttribute('aTreatment', new THREE.BufferAttribute(treatments, 1));
 
-        gl_FragColor = vec4(cloudColor, alpha * uOpacity);
-      }
-    `;
+        const mesh = new THREE.Mesh(geo, cfg.mat);
+        mesh.position.set(cfg.x, cfg.y, cfg.z);
+        scene.add(mesh);
 
-    const cloudUniforms = {
-      uTexture: { value: null },
-      uTime: { value: 0 },
-      uOpacity: { value: 0.88 },
-      uDotSize: { value: 5.5 },
-      uDotStrength: { value: 0.38 }
+        cloudPlanes.push({
+          mesh,
+          baseX: cfg.x,
+          speed: cfg.speed,
+          minX: -80,
+          maxX: 80
+        });
+      });
+
+      // Mountain ground plane at final descent base
+      const groundGeo = new THREE.PlaneGeometry(160, 70);
+      const groundMat = new THREE.MeshBasicMaterial({
+        map: groundTexture,
+        transparent: true,
+        opacity: 0.75,
+        depthWrite: false
+      });
+      const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+      groundMesh.position.set(0, -115, -60);
+      scene.add(groundMesh);
+
+    } catch (e) {
+      console.error('WebGL flight canvas init failed:', e);
+      return;
+    }
+
+    // Scroll-driven camera descent tracking
+    let targetCameraY = 15;
+    let targetCameraZ = 35;
+
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
+      // Camera descends smoothly from altitude 15 down to -105 through the cloud strata
+      targetCameraY = 15 - ratio * 120;
+      targetCameraZ = 35 - ratio * 25;
     };
 
-    // Load cloud bank texture
-    textureLoader.load('/brand/gpc/clouds/cloud-bank-a.png', (tex) => {
-      cloudUniforms.uTexture.value = tex;
-    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-    const cloudMaterial = new THREE.ShaderMaterial({
-      vertexShader: cloudVertexShader,
-      fragmentShader: cloudFragmentShader,
-      uniforms: cloudUniforms,
-      transparent: true,
-      depthWrite: false
-    });
-
-    // Create cloud instances along the flight path (from Y=18 down to Y=-10)
-    const cloudsGroup = new THREE.Group();
-    const cloudGeom = new THREE.PlaneGeometry(16, 9);
-    
-    // Add variations attribute
-    const count = 18;
-    for (let i = 0; i < count; i++) {
-      const mesh = new THREE.Mesh(cloudGeom, cloudMaterial);
-      const angle = (i / count) * Math.PI * 2;
-      const radius = 6 + Math.random() * 8;
-      const y = 22 - (i / count) * 35; // Descent from altitude
-      mesh.position.set(Math.sin(angle) * radius, y, -Math.cos(angle) * 3 - 2);
-      mesh.rotation.z = (Math.random() - 0.5) * 0.2;
-      mesh.scale.setScalar(0.8 + Math.random() * 0.8);
-
-      const varAttr = new Float32Array([Math.random(), Math.random(), Math.random()]);
-      mesh.geometry = mesh.geometry.clone();
-      mesh.geometry.setAttribute('aVariation', new THREE.InstancedBufferAttribute(varAttr, 3));
-      cloudsGroup.add(mesh);
-    }
-    scene.add(cloudsGroup);
-
-    // 4. Airliner (Cruising at top elevation)
-    let airlinerMesh = null;
-    textureLoader.load('/brand/gpc/airliner-gpc-color-block.png', (tex) => {
-      const planeGeom = new THREE.PlaneGeometry(10, 5.5);
-      const planeMat = new THREE.MeshBasicMaterial({
-        map: tex,
-        transparent: true,
-        depthWrite: false
-      });
-      airlinerMesh = new THREE.Mesh(planeGeom, planeMat);
-      airlinerMesh.position.set(2.5, 17.5, 2);
-      airlinerMesh.rotation.z = -0.05;
-      scene.add(airlinerMesh);
-    });
-
-    // 5. Parachuting Tech Props (Mid-descent)
-    const midGroup = new THREE.Group();
-    textureLoader.load('/brand/gpc/flight/gold-token-briefcase-parachute-cutout.png', (tex) => {
-      const geom = new THREE.PlaneGeometry(3.5, 4.5);
-      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
-      const prop1 = new THREE.Mesh(geom, mat);
-      prop1.position.set(-5, 8, 0);
-      midGroup.add(prop1);
-    });
-
-    textureLoader.load('/brand/gpc/flight/skydiver-phone-cutout.png', (tex) => {
-      const geom = new THREE.PlaneGeometry(2.5, 4);
-      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
-      const prop2 = new THREE.Mesh(geom, mat);
-      prop2.position.set(5.5, 3, -1);
-      midGroup.add(prop2);
-    });
-    scene.add(midGroup);
-
-    // 6. Ground Mountain Cutout (Landing altitude)
-    textureLoader.load('/brand/gpc/flight/mountain-ground-cutout.png', (tex) => {
-      const groundGeom = new THREE.PlaneGeometry(32, 12);
-      const groundMat = new THREE.MeshBasicMaterial({
-        map: tex,
-        transparent: true,
-        depthWrite: false
-      });
-      const groundMesh = new THREE.Mesh(groundGeom, groundMat);
-      groundMesh.position.set(0, -12, -4);
-      scene.add(groundMesh);
-    });
-
-    // 7. Resize Handler
-    const handleResize = () => {
+    // Resize handler
+    const onResize = () => {
+      if (!renderer || !camera) return;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-    window.addEventListener('resize', handleResize);
 
-    // 8. Animation Loop
+    window.addEventListener('resize', onResize);
+
+    // Animation render loop
     let clock = new THREE.Clock();
-    let animationFrameId;
 
     const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      animFrame = requestAnimationFrame(animate);
 
-      cloudUniforms.uTime.value = elapsedTime;
+      const delta = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
 
-      // Slight aircraft cruise bobbing
-      if (airlinerMesh) {
-        airlinerMesh.position.y = 17.5 + Math.sin(elapsedTime * 1.2) * 0.15;
-        airlinerMesh.position.x = 2.5 + Math.cos(elapsedTime * 0.8) * 0.1;
-      }
+      // Update shader time uniform for subtle organic vapor drift
+      if (matA) matA.uniforms.uTime.value = elapsed;
+      if (matB) matB.uniforms.uTime.value = elapsed;
 
-      // Parachute sway
-      midGroup.children.forEach((c, idx) => {
-        c.rotation.z = Math.sin(elapsedTime * 1.5 + idx) * 0.08;
+      // Smooth camera interpolation for fluid flight feel
+      camera.position.y += (targetCameraY - camera.position.y) * 0.08;
+      camera.position.z += (targetCameraZ - camera.position.z) * 0.08;
+      camera.lookAt(0, camera.position.y - 10, -50);
+
+      // Drift clouds horizontally across the flight path
+      cloudPlanes.forEach((cp) => {
+        cp.mesh.position.x += cp.speed * (delta * 60);
+        if (cp.mesh.position.x > cp.maxX) cp.mesh.position.x = cp.minX;
+        if (cp.mesh.position.x < cp.minX) cp.mesh.position.x = cp.maxX;
       });
-
-      // Camera descent synced to global scroll
-      const scrollY = window.scrollY;
-      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-      const scrollRatio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-
-      // Descents from Y=18 (30,000 ft) down to Y=-10 (Ground)
-      const targetCamY = THREE.MathUtils.lerp(18, -10, scrollRatio);
-      camera.position.y += (targetCamY - camera.position.y) * 0.08;
-      camera.lookAt(0, camera.position.y, 0);
 
       renderer.render(scene, camera);
     };
@@ -236,18 +286,26 @@ export default function FlightCanvas({ scrollProgress = 0 }) {
     animate();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-      if (container && renderer.domElement) {
-        container.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
+      cancelAnimationFrame(animFrame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      if (renderer) renderer.dispose();
     };
   }, []);
 
   return (
     <div className="canvas-container" aria-hidden="true">
-      <div ref={containerRef} className="flight-canvas flight-canvas--background" />
+      {/* 1. Authentic Applied Imagination Sky Gradient (Sky Blue -> Golden Horizon) */}
+      <div className="flight-canvas flight-canvas--background" />
+
+      {/* 2. Three.js WebGL Volumetric Cloud Strata with Halftone Shader */}
+      <canvas ref={canvasRef} className="flight-canvas flight-canvas--webgl" />
+
+      {/* 3. Global Magazine Halftone Dot-Raster Matrix Grid */}
+      <div className="flight-canvas-halftone" />
+
+      {/* 4. Atmospheric Blue Luminous Rim Glow */}
+      <div className="flight-canvas-vignette" />
     </div>
   );
 }

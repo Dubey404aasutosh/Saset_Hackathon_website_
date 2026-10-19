@@ -39,13 +39,13 @@ export default function App() {
 
           <ScrollRevealText
             as="p"
-            className="article-block"
+            className="article-intro__copy"
             text="The event is focused on using Artificial Intelligence to advance battery safety, sustainability, and indigenous innovation. From mitigating thermal runaway hazards in electric vehicles to building gigawatt-hour grid storage and extreme-climate defense energy systems, the era of passive chemical batteries is over."
           />
 
           <ScrollRevealText
             as="p"
-            className="article-block"
+            className="article-intro__copy"
             text="Whether you are writing AI neural digital twin algorithms, engineering embedded firmware for edge BMS microcontrollers, testing sodium-ion cathode formulations, or designing circular second-life cascading models — this is the premier national platform to showcase your breakthrough."
           />
         </div>

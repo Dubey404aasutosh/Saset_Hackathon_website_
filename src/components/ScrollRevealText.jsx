@@ -102,6 +102,8 @@ export default function ScrollRevealText({
             <span
               className="scroll-reveal-word"
               style={{
+                display: 'inline-block',
+                marginRight: idx < words.length - 1 ? '0.28em' : undefined,
                 opacity: 0.15,
                 filter: 'blur(4px)',
                 color: isHighlight ? 'var(--color-red)' : undefined,

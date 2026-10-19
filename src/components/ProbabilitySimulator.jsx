@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 /**
- * Probability Simulator Component
- * Replicating Applied Imagination's interactive next-token probability bar simulator
+ * Probability Simulator — Sticky Scroll-Pinned Section
+ * Interactive token-probability-style bar simulator for battery innovation domains
  */
 const CANDIDATES = [
   {
@@ -36,42 +36,44 @@ export default function ProbabilitySimulator() {
 
   return (
     <section className="probability" aria-labelledby="prob-heading">
-      <div className="probability__inner">
-        <p className="probability__eyebrow">Electrochemical Paradigm Shift</p>
-        <h2 id="prob-heading" className="probability__heading">
-          The future of battery technology is{' '}
-          <em style={{ color: CANDIDATES[selectedIndex].color, fontStyle: 'italic' }}>
-            {CANDIDATES[selectedIndex].word}.
-          </em>
-        </h2>
+      <div className="probability__sticky">
+        <div className="probability__inner">
+          <p className="probability__eyebrow">Electrochemical Paradigm Shift</p>
+          <h2 id="prob-heading" className="probability__heading">
+            The future of battery technology is{' '}
+            <em style={{ color: CANDIDATES[selectedIndex].color, fontStyle: 'italic' }}>
+              {CANDIDATES[selectedIndex].word}.
+            </em>
+          </h2>
 
-        <ol className="probability__candidates">
-          {CANDIDATES.map((cand, idx) => (
-            <li
-              key={cand.word}
-              className={`probability__candidate ${selectedIndex === idx ? 'is-active' : ''}`}
-              style={{
-                '--cand-color': cand.color,
-                '--cand-fill': selectedIndex === idx ? '1' : `${cand.prob / 100}`
-              }}
-              onPointerEnter={() => setSelectedIndex(idx)}
-              onClick={() => setSelectedIndex(idx)}
-              tabIndex={0}
-              role="button"
-            >
-              <div className="probability__candidate-bar" />
-              <div>
-                <span className="probability__candidate-word">{cand.word}</span>
-                <p className="probability__candidate-desc">{cand.desc}</p>
-              </div>
-              <span className="probability__candidate-value">{cand.prob}% Probability</span>
-            </li>
-          ))}
-        </ol>
+          <ol className="probability__candidates">
+            {CANDIDATES.map((cand, idx) => (
+              <li
+                key={cand.word}
+                className={`probability__candidate ${selectedIndex === idx ? 'is-active' : ''}`}
+                style={{
+                  '--cand-color': cand.color,
+                  '--cand-fill': selectedIndex === idx ? '1' : `${cand.prob / 100}`
+                }}
+                onPointerEnter={() => setSelectedIndex(idx)}
+                onClick={() => setSelectedIndex(idx)}
+                tabIndex={0}
+                role="button"
+              >
+                <div className="probability__candidate-bar" />
+                <div>
+                  <span className="probability__candidate-word">{cand.word}</span>
+                  <p className="probability__candidate-desc">{cand.desc}</p>
+                </div>
+                <span className="probability__candidate-value">{cand.prob}%</span>
+              </li>
+            ))}
+          </ol>
 
-        <p className="probability__takeaway">
-          "The conventional engineering choice is rarely the breakthrough that reimagines an industry."
-        </p>
+          <p className="probability__takeaway">
+            "The conventional engineering choice is rarely the breakthrough that reimagines an industry."
+          </p>
+        </div>
       </div>
     </section>
   );

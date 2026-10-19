@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="smartCasing" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#efe7dd"/>
+      <stop offset="40%" stop-color="#faf5ee"/>
+      <stop offset="100%" stop-color="#d9d1c8"/>
+    </linearGradient>
+    <linearGradient id="neuralFlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9b338f"/>
+      <stop offset="50%" stop-color="#ffc013"/>
+      <stop offset="100%" stop-color="#f94e2a"/>
+    </linearGradient>
+    <radialGradient id="balancedCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffc013" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#faf5ee" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#faf5ee"/>
+
+  <!-- Blueprint Title -->
+  <text x="25" y="35" font-family="'gtAmericaMono', monospace" font-size="11" font-weight="bold" fill="#9b338f" letter-spacing="1.5">INTELLIGENT CELL 4.0 : COGNITIVE ARCHITECTURE</text>
+  <text x="25" y="52" font-family="'fsKim', serif" font-size="15" fill="#232424">Embedded Fiber Bragg Sensing & AI Digital Twin Core</text>
+
+  <!-- Outer Cell Body -->
+  <g transform="translate(100, 80)">
+    <!-- Smart Integrated Cap with Neural Co-processor -->
+    <rect x="100" y="-12" width="100" height="26" rx="4" fill="#232424" stroke="#ffc013" stroke-width="1.5"/>
+    <text x="150" y="4" font-family="'gtAmericaMono', monospace" font-size="8" fill="#ffc013" text-anchor="middle">EDGE AI BMS 4.0</text>
+    
+    <!-- Cell Body -->
+    <rect x="50" y="15" width="200" height="240" rx="8" fill="url(#smartCasing)" stroke="#232424" stroke-width="2"/>
+    
+    <!-- In-situ Fiber Bragg Optical Grating (Core sensor spine) -->
+    <line x1="150" y1="15" x2="150" y2="245" stroke="#9b338f" stroke-width="3"/>
+    
+    <!-- Sensor Nodes along spine -->
+    <circle cx="150" cy="65" r="5" fill="#9b338f"/>
+    <circle cx="150" cy="130" r="5" fill="#ffc013"/>
+    <circle cx="150" cy="195" r="5" fill="#f94e2a"/>
+
+    <!-- Ceramic Phase Change Matrix Rings -->
+    <ellipse cx="150" cy="130" rx="70" ry="70" fill="url(#balancedCore)" stroke="#9b338f" stroke-width="1" stroke-dasharray="4 2"/>
+
+    <!-- Sensor Data Callout Lines -->
+    <path d="M 155 65 L 280 65" stroke="#9b338f" stroke-width="1.5"/>
+    <text x="285" y="68" font-family="'gtAmericaMono', monospace" font-size="9" fill="#9b338f">In-situ Strain Sensor</text>
+
+    <path d="M 155 130 L 280 130" stroke="#ffc013" stroke-width="1.5"/>
+    <text x="285" y="133" font-family="'gtAmericaMono', monospace" font-size="9" fill="#f66f00">Real-time Impedance (EIS)</text>
+
+    <path d="M 155 195 L 280 195" stroke="#f94e2a" stroke-width="1.5"/>
+    <text x="285" y="198" font-family="'gtAmericaMono', monospace" font-size="9" fill="#f94e2a">Core Temp Sensor (±0.1°C)</text>
+
+    <!-- Wireless IoT Mesh Node -->
+    <rect x="15" y="120" width="30" height="20" rx="3" fill="#232424"/>
+    <text x="30" y="133" font-family="'gtAmericaMono', monospace" font-size="7" fill="#faf5ee" text-anchor="middle">BLE</text>
+    <path d="M 30 115 A 8 8 0 0 1 30 95" fill="none" stroke="#9b338f" stroke-width="1.5"/>
+    <path d="M 30 118 A 15 15 0 0 1 30 85" fill="none" stroke="#9b338f" stroke-width="1.2"/>
+  </g>
+
+  <!-- Technical Specs Table at Bottom -->
+  <g transform="translate(25, 345)">
+    <line x1="0" y1="0" x2="450" y2="0" stroke="#d9d1c8" stroke-width="1"/>
+    <text x="0" y="18" font-family="'gtAmericaMono', monospace" font-size="9" fill="#9b338f">CYCLE LIFE: 2,500+ CYCLES</text>
+    <text x="170" y="18" font-family="'gtAmericaMono', monospace" font-size="9" fill="#232424">ACCURACY: ±0.5% SOC (NEURAL)</text>
+    <text x="330" y="18" font-family="'gtAmericaMono', monospace" font-size="9" fill="#15803d">SAFETY: SELF-HEALING AI</text>
+  </g>
+</svg>

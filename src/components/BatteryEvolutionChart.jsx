@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * Battery Evolution SVG Line Chart
- * Replicating the Applied Imagination SVG Chart with animated paths, axis ticks, and vintage prop heads
+ * Animated line-draw via stroke-dashoffset controlled by scroll
+ * Legend items use layered paper-cut jitter boxes
  */
 export default function BatteryEvolutionChart() {
   const [drawn, setDrawn] = useState(false);
@@ -12,7 +13,7 @@ export default function BatteryEvolutionChart() {
       const el = document.getElementById('battery-chart');
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.8) {
+      if (rect.top < window.innerHeight * 0.75) {
         setDrawn(true);
       }
     };
@@ -32,6 +33,9 @@ export default function BatteryEvolutionChart() {
       </div>
 
       <div className="imagination-chart__plot">
+        {/* Halftone texture overlay */}
+        <div className="halftone-overlay" aria-hidden="true" />
+
         <svg
           className="imagination-chart__svg"
           viewBox="0 0 1000 520"
@@ -61,17 +65,23 @@ export default function BatteryEvolutionChart() {
             <text x="65" y="180" textAnchor="end" dominantBaseline="middle">75%</text>
             <text x="65" y="90" textAnchor="end" dominantBaseline="middle">100%</text>
 
-            <text x="80" y="480" textAnchor="middle">0</text>
-            <text x="240" y="480" textAnchor="middle">400 Cycles</text>
-            <text x="440" y="480" textAnchor="middle">800 Cycles</text>
-            <text x="640" y="480" textAnchor="middle">1,200 Cycles</text>
-            <text x="840" y="480" textAnchor="middle">1,600 Cycles</text>
-            <text x="960" y="480" textAnchor="middle">2,000 Cycles</text>
+            <text x="80" y="488" textAnchor="middle">0</text>
+            <text x="240" y="488" textAnchor="middle">400</text>
+            <text x="440" y="488" textAnchor="middle">800</text>
+            <text x="640" y="488" textAnchor="middle">1,200</text>
+            <text x="840" y="488" textAnchor="middle">1,600</text>
+            <text x="960" y="488" textAnchor="middle">2,000</text>
           </g>
 
-          {/* Data Curves */}
-          <g className="imagination-chart__lines">
-            {/* Curve 1: Conventional Unmonitored Cell (Steep drop-off) */}
+          {/* Axis Titles */}
+          <g className="imagination-chart__axis-title">
+            <text x="520" y="510" textAnchor="middle">Charge Cycles</text>
+            <text x="30" y="270" textAnchor="middle" transform="rotate(-90, 30, 270)">Capacity Retention</text>
+          </g>
+
+          {/* Data Curves — animated line draw */}
+          <g>
+            {/* Unmonitored (steep drop-off) */}
             <path
               className="imagination-chart__line"
               d="M 80 90 L 220 110 L 360 160 L 500 280 L 640 400 L 780 440 L 960 450"
@@ -82,48 +92,53 @@ export default function BatteryEvolutionChart() {
               }}
             />
 
-            {/* Curve 2: Rule-based BMS (Moderate Linear Fade) */}
+            {/* Rule-based BMS (moderate fade) */}
             <path
               className="imagination-chart__line"
               d="M 80 90 L 220 105 L 360 140 L 500 185 L 640 240 L 780 310 L 960 380"
               pathLength="1"
               style={{
                 '--line-accent': 'var(--color-yellow)',
-                '--line-draw': drawn ? '1' : '0'
+                '--line-draw': drawn ? '1' : '0',
+                transitionDelay: '0.3s'
               }}
             />
 
-            {/* Curve 3: Intelligent Cell 4.0 Digital Twin (High retention 92%) */}
+            {/* Cell 4.0 Digital Twin (high retention) */}
             <path
               className="imagination-chart__line"
               d="M 80 90 L 220 92 L 360 95 L 500 102 L 640 112 L 780 120 L 960 130"
               pathLength="1"
               style={{
                 '--line-accent': 'var(--color-purple)',
-                '--line-draw': drawn ? '1' : '0'
+                '--line-draw': drawn ? '1' : '0',
+                transitionDelay: '0.6s'
               }}
             />
           </g>
         </svg>
       </div>
 
+      {/* Legend — layered paper-cut boxes */}
       <ul className="imagination-chart__legend">
-        <li className="imagination-chart__legend-item" style={{ '--line-accent': 'var(--color-purple)' }}>
-          <span className="imagination-chart__legend-box" aria-hidden="true" />
-          <span>Intelligent Cell 4.0 (AI Digital Twin & Smart Chemistry)</span>
-        </li>
-        <li className="imagination-chart__legend-item" style={{ '--line-accent': 'var(--color-yellow)' }}>
-          <span className="imagination-chart__legend-box" aria-hidden="true" />
-          <span>Rule-based Standard BMS</span>
-        </li>
-        <li className="imagination-chart__legend-item" style={{ '--line-accent': 'var(--color-red)' }}>
-          <span className="imagination-chart__legend-box" aria-hidden="true" />
-          <span>Unmonitored / Conventional Lithium-Ion Pack</span>
-        </li>
+        {[
+          { color: 'var(--color-purple)', label: 'Cell 4.0 (AI Digital Twin)', offset: '0s' },
+          { color: 'var(--color-yellow)', label: 'Rule-based Standard BMS', offset: '0.16s' },
+          { color: 'var(--color-red)', label: 'Unmonitored Li-Ion Pack', offset: '0.33s' }
+        ].map(item => (
+          <li
+            key={item.label}
+            className="imagination-chart__legend-item"
+            style={{ '--line-accent': item.color, '--legend-offset': item.offset }}
+          >
+            <span className="imagination-chart__legend-box" aria-hidden="true" />
+            <span className="imagination-chart__legend-label">{item.label}</span>
+          </li>
+        ))}
       </ul>
 
       <figcaption className="imagination-chart__caption">
-        Figure 1.0 — Predictive digital twins prevent micro-dendrite formation, preserving state-of-health up to 3x longer than traditional cut-off thresholds.
+        Figure 1.0 — Predictive digital twins prevent micro-dendrite formation, preserving state-of-health up to 3× longer than traditional cut-off thresholds.
       </figcaption>
     </figure>
   );

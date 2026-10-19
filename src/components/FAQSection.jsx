@@ -49,11 +49,14 @@ export default function FAQSection() {
             <div
               key={idx}
               style={{
-                background: 'var(--color-canvas)',
+                background: 'rgba(250, 245, 238, 0.90)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
                 border: '1px solid var(--color-border)',
                 borderRadius: '2px',
                 overflow: 'hidden',
-                transition: 'border-color 0.2s ease'
+                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                boxShadow: '0 4px 16px rgba(35, 36, 36, 0.04)'
               }}
             >
               <button

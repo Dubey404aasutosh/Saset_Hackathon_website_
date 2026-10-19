@@ -96,6 +96,7 @@ export default function FlightCanvas() {
     let renderer, scene, camera, animFrame;
     let cloudPlanes = [];
     let matA, matB;
+    let airlinerMesh, jetStreamMesh;
 
     try {
       renderer = new THREE.WebGLRenderer({
@@ -212,6 +213,7 @@ export default function FlightCanvas() {
       });
 
       // Mountain ground plane at final descent base
+      // Mountain ground plane at final descent base
       const groundGeo = new THREE.PlaneGeometry(160, 70);
       const groundMat = new THREE.MeshBasicMaterial({
         map: groundTexture,
@@ -222,6 +224,35 @@ export default function FlightCanvas() {
       const groundMesh = new THREE.Mesh(groundGeo, groundMat);
       groundMesh.position.set(0, -115, -60);
       scene.add(groundMesh);
+
+      // High-altitude airliner & jet stream contrail
+      const airlinerTexture = loader.load('/brand/gpc/airliner-gpc-color-block.png');
+      const jetStreamTexture = loader.load('/brand/gpc/flight/jet-stream-magnific.png');
+
+      const airlinerGeo = new THREE.PlaneGeometry(24, 9.6);
+      const airlinerMat = new THREE.MeshBasicMaterial({
+        map: airlinerTexture,
+        transparent: true,
+        opacity: 0.95,
+        depthWrite: false
+      });
+      airlinerMesh = new THREE.Mesh(airlinerGeo, airlinerMat);
+      airlinerMesh.position.set(-8, 19, -20);
+      airlinerMesh.rotation.z = 0.02;
+      scene.add(airlinerMesh);
+
+      const jetStreamGeo = new THREE.PlaneGeometry(42, 8.5);
+      const jetStreamMat = new THREE.MeshBasicMaterial({
+        map: jetStreamTexture,
+        transparent: true,
+        opacity: 0.75,
+        depthWrite: false
+      });
+      jetStreamMesh = new THREE.Mesh(jetStreamGeo, jetStreamMat);
+      jetStreamMesh.scale.x = -1; // flip so the narrow nozzle attaches to the airplane engines
+      jetStreamMesh.position.set(-34, 18.2, -21);
+      jetStreamMesh.rotation.z = 0.02;
+      scene.add(jetStreamMesh);
 
     } catch (e) {
       console.error('WebGL flight canvas init failed:', e);
@@ -244,6 +275,15 @@ export default function FlightCanvas() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    // Mouse parallax
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    const onMouseMove = (e) => {
+      targetMouseX = (e.clientX / window.innerWidth - 0.5) * 5;
+      targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2.5;
+    };
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
 
     // Resize handler
     const onResize = () => {
@@ -268,10 +308,11 @@ export default function FlightCanvas() {
       if (matA) matA.uniforms.uTime.value = elapsed;
       if (matB) matB.uniforms.uTime.value = elapsed;
 
-      // Smooth camera interpolation for fluid flight feel
-      camera.position.y += (targetCameraY - camera.position.y) * 0.08;
+      // Smooth camera interpolation with mouse parallax
+      camera.position.x += (targetMouseX - camera.position.x) * 0.05;
+      camera.position.y += ((targetCameraY - targetMouseY) - camera.position.y) * 0.08;
       camera.position.z += (targetCameraZ - camera.position.z) * 0.08;
-      camera.lookAt(0, camera.position.y - 10, -50);
+      camera.lookAt(targetMouseX * 0.3, camera.position.y - 10, -50);
 
       // Drift clouds horizontally across the flight path
       cloudPlanes.forEach((cp) => {
@@ -279,6 +320,16 @@ export default function FlightCanvas() {
         if (cp.mesh.position.x > cp.maxX) cp.mesh.position.x = cp.minX;
         if (cp.mesh.position.x < cp.minX) cp.mesh.position.x = cp.maxX;
       });
+
+      // Cruising airliner with billowing contrail
+      if (airlinerMesh && jetStreamMesh) {
+        airlinerMesh.position.x += 0.012 * (delta * 60);
+        jetStreamMesh.position.x = airlinerMesh.position.x - 26;
+        if (airlinerMesh.position.x > 80) {
+          airlinerMesh.position.x = -80;
+          jetStreamMesh.position.x = -106;
+        }
+      }
 
       renderer.render(scene, camera);
     };
@@ -289,6 +340,7 @@ export default function FlightCanvas() {
       cancelAnimationFrame(animFrame);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('mousemove', onMouseMove);
       if (renderer) renderer.dispose();
     };
   }, []);

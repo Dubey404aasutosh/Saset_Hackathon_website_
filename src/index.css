@@ -179,7 +179,7 @@
 html {
   color-scheme: light;
   color: var(--color-ink);
-  background: #fff;
+  background: #7eb8da;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   tab-size: 4;
@@ -1211,7 +1211,9 @@ h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
 
 .probability__candidate {
   position: relative;
-  background: var(--color-canvas);
+  background: rgba(250, 245, 238, 0.90);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-border);
   padding: 1.4rem 1.2rem;
   cursor: pointer;
@@ -1221,7 +1223,7 @@ h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
   justify-content: space-between;
   min-height: 120px;
   text-align: left;
-  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease;
+  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease, box-shadow 0.25s ease;
 }
 
 .probability__candidate:hover,
@@ -1756,16 +1758,19 @@ h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
 }
 
 .timeline-card {
-  background: var(--color-canvas);
+  background: rgba(250, 245, 238, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-border);
   padding: 2.5rem 2rem;
   position: relative;
-  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease;
+  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease, box-shadow 0.25s ease;
 }
 
 .timeline-card:hover {
   transform: translateY(-4px);
   border-color: var(--color-ink);
+  box-shadow: 0 12px 32px rgba(35, 36, 36, 0.08);
 }
 
 .timeline-card__phase {
@@ -1820,19 +1825,22 @@ h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
 }
 
 .fee-card {
-  background: var(--color-canvas);
+  background: rgba(250, 245, 238, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-border);
   padding: 3rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease;
+  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease, box-shadow 0.25s ease;
 }
 
 .fee-card:hover {
   transform: translateY(-5px);
   border-color: var(--color-ink);
+  box-shadow: 0 12px 32px rgba(35, 36, 36, 0.08);
 }
 
 .fee-card--highlight {
@@ -1883,13 +1891,17 @@ h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
 
 .benefit-card {
   padding: 2rem;
-  background: var(--color-canvas);
+  background: rgba(250, 245, 238, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-border);
-  transition: transform 0.25s var(--ease-brand);
+  transition: transform 0.25s var(--ease-brand), border-color 0.2s ease, box-shadow 0.25s ease;
 }
 
 .benefit-card:hover {
   transform: translateY(-3px);
+  border-color: var(--color-ink);
+  box-shadow: 0 10px 24px rgba(35, 36, 36, 0.06);
 }
 
 .benefit-card__icon {

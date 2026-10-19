@@ -11,6 +11,8 @@ import ThemesGrid from './components/ThemesGrid';
 import MayaSpectrum from './components/MayaSpectrum';
 import TimelineSection from './components/TimelineSection';
 import PrizesAndFees from './components/PrizesAndFees';
+import EvaluationSection from './components/EvaluationSection';
+import FAQSection from './components/FAQSection';
 import GroundForm from './components/GroundForm';
 
 export default function App() {
@@ -22,29 +24,29 @@ export default function App() {
       {/* Sticky Avionics Elevation & Battery Cell Telemetry HUD */}
       <AltitudeHud />
 
-      {/* Hero Masthead with Dynamic Brand Mark Cycler */}
+      {/* Hero Masthead with Dynamic Brand Mark Cycler & Nav */}
       <Masthead />
 
-      {/* Narrative Intro — Word-by-Word Scroll Reveal */}
-      <section className="article-intro" aria-label="Opening narrative">
+      {/* Opening Manifesto — Word-by-Word Progressive Scroll Reveal */}
+      <section className="article-intro" aria-label="Hackathon introduction">
         <div className="article-intro__inner">
           <ScrollRevealText
             as="p"
             className="article-intro__lead"
-            text="I'm sitting on a flight, 30,000 feet in the sky, looking at battery specifications from the world's largest gigafactories, when I realize: everything we're doing with conventional battery R&D is fundamentally constrained."
-            highlightWord="fundamentally"
+            text="Intelligent Battery Cell 4.0 Hackathon 2026 brings together India's sharpest students, research scholars, deeptech startups, and MSMEs to develop innovative solutions for the future of battery technology."
+            highlightWord="innovative"
           />
 
           <ScrollRevealText
             as="p"
             className="article-block"
-            text="We keep treating electrochemical cells like passive, sealed cans. We wrap millions of lithium-ion cylinders in metal casings, attach rudimentary voltage relays, and wonder why energy density plateaus, thermal runaway surprises us, and recycling remains an unsolved crisis."
+            text="The event is focused on using Artificial Intelligence to advance battery safety, sustainability, and indigenous innovation. From mitigating thermal runaway hazards in electric vehicles to building gigawatt-hour grid storage and extreme-climate defense energy systems, the era of passive chemical batteries is over."
           />
 
           <ScrollRevealText
             as="p"
             className="article-block"
-            text="The issue isn't raw chemistry alone. Chemistry has given us incredible breakthroughs over decades. The problem is a lack of applied intelligence: we don't have cells that can sense, think, adapt, and self-heal in real time."
+            text="Whether you are writing AI neural digital twin algorithms, engineering embedded firmware for edge BMS microcontrollers, testing sodium-ion cathode formulations, or designing circular second-life cascading models — this is the premier national platform to showcase your breakthrough."
           />
         </div>
       </section>
@@ -52,46 +54,32 @@ export default function App() {
       {/* High-Impact Statement Section with Cut-Corner Badges */}
       <Statement />
 
-      {/* Essay Block — The Gap Between Academic Papers and Real Packs */}
-      <section className="article-block" aria-labelledby="r-and-d-gap">
-        <div className="article-block__inner">
-          <p className="article-block__chapter-label article-block__chapter-label--yellow">
-            01 / The Stalled Revolution
-          </p>
-          <h2 className="article-block__heading" id="r-and-d-gap">
-            Thousands of research papers are published each month. Almost none reach domestic production.
-          </h2>
-          <ScrollRevealText
-            as="p"
-            text="Every engineering institution has prototypes that demonstrated remarkable coin-cell performance under sterile laboratory conditions. But the moment those chemistries are scaled into high-vibration automotive packs or multi-megawatt grid containers, unpredictable thermal gradients destroy the lifespan."
-          />
-          <ScrollRevealText
-            as="p"
-            text="Intelligent Battery Cell 4.0 changes this trajectory by infusing artificial intelligence directly into the electrochemical loop: real-time digital twins, predictive impedance spectroscopy, IoT edge telemetry, and sovereign materials."
-          />
-        </div>
-      </section>
-
-      {/* Battery Cycle Life SVG Chart */}
-      <BatteryEvolutionChart />
-
-      {/* Interactive Probability / Challenge Simulator */}
-      <ProbabilitySimulator />
-
-      {/* Design Thinking Stage: Group 1 vs Group 2 */}
-      <PromptSplit />
-
-      {/* Core Hackathon Themes Grid */}
+      {/* Core Hackathon Themes Grid (All 8 Themes) */}
       <ThemesGrid />
 
-      {/* Raymond Loewy MAYA Spectrum & Interactive Spawning Cards */}
+      {/* Battery Cycle Life & AI Optimization SVG Chart */}
+      <BatteryEvolutionChart />
+
+      {/* Interactive Probability / Bottleneck Simulator */}
+      <ProbabilitySimulator />
+
+      {/* Interactive Architecture Stage: Group 1 vs Group 2 */}
+      <PromptSplit />
+
+      {/* Raymond Loewy MAYA Spectrum & Interactive Spawning Tech Cards */}
       <MayaSpectrum />
 
-      {/* Timeline & Roadmap */}
+      {/* Timeline & Key Dates */}
       <TimelineSection />
 
       {/* Prizes, Incubation & Registration Fees */}
       <PrizesAndFees />
+
+      {/* Evaluation Stages & Judging Criteria */}
+      <EvaluationSection />
+
+      {/* Frequently Asked Questions */}
+      <FAQSection />
 
       {/* Ground Level Contact & Registration EOI Portal */}
       <GroundForm />

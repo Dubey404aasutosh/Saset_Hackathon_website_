@@ -347,75 +347,80 @@ h6 {
 }
 
 /* --- 8. Altitude & Telemetry HUD --- */
+/* Compact frosted chip so it stays legible over any section:
+   bottom-left on tablets/desktops, a single-line pill on phones. */
 .altitude-hud {
   position: fixed;
   z-index: 10;
-  top: 50%;
-  left: var(--space-horizontal-sm);
-  color: var(--color-ink);
+  left: clamp(0.75rem, 1.5vw, 1.5rem);
+  bottom: clamp(0.75rem, 1.5vw, 1.5rem);
   display: flex;
-  align-items: center;
-  gap: 0.875em;
+  flex-direction: column;
+  gap: 0.6em;
+  padding: 0.75em 0.9em 0.8em;
+  color: var(--color-ink);
+  background: rgba(250, 245, 238, 0.8);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  border: 1px solid rgba(35, 36, 36, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(35, 36, 36, 0.08);
   pointer-events: none;
-  transform: translateY(-50%);
   font-family: var(--font-label);
+  font-size: 13px;
   user-select: none;
 }
 
+/* Remaining-altitude bar */
 .altitude-hud__track {
-  width: 1px;
-  height: 5em;
-  background: rgba(35, 36, 36, 0.15);
+  order: 2;
+  width: 100%;
+  height: 2px;
+  background: rgba(35, 36, 36, 0.12);
   position: relative;
   overflow: hidden;
-  opacity: var(--elevation-track-load, 1);
-  transform: scaleY(var(--elevation-track-load, 1));
-  transform-origin: bottom;
 }
 
 .altitude-hud__track span {
   position: absolute;
   inset: 0;
-  background: currentColor;
-  transform: scaleY(var(--altitude-remaining, 1));
-  transform-origin: bottom;
+  background: var(--color-red);
+  transform: scaleX(var(--altitude-remaining, 1));
+  transform-origin: 0 50%;
 }
 
 .altitude-hud__readout {
   display: flex;
   flex-direction: column;
+  gap: 0.4em;
 }
 
 .altitude-hud__label {
-  opacity: var(--elevation-label-opacity, 1);
-  margin-bottom: 0.7em;
-  font-size: 0.625em;
-  display: block;
+  font-size: 0.7em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--color-ink-muted);
 }
 
 .altitude-hud__value {
-  min-width: 7.5em;
+  min-width: 9ch;
   font-family: var(--font-label);
-  font-size: var(--type-label-sm);
+  font-size: 1em;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
-  opacity: var(--elevation-value-opacity, 1);
-  filter: blur(var(--elevation-value-blur, 0px));
-  will-change: opacity, filter;
   font-weight: 500;
   line-height: 1;
+  white-space: nowrap;
   display: block;
 }
 
 .altitude-hud__battery-gauge {
-  margin-top: 0.5em;
-  font-size: 0.65em;
+  font-size: 0.78em;
   color: var(--color-red);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 0.35em;
@@ -434,40 +439,28 @@ h6 {
 
 @media screen and (max-width: 767px) {
   .altitude-hud {
-    top: auto;
-    bottom: calc(var(--space-horizontal-sm) + 0.5em);
-    flex-direction: column;
-    align-items: center;
-    gap: 0.7em;
     left: 50%;
-    transform: translate(-50%);
-  }
-
-  .altitude-hud__track {
-    width: 7.5em;
-    height: 1px;
-    transform: scaleX(var(--elevation-track-load, 1));
-    transform-origin: 0;
-  }
-
-  .altitude-hud__track span {
-    transform: scaleX(var(--altitude-remaining, 1));
-    transform-origin: 0;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    padding: 0.55em 1em 0.65em;
+    font-size: 12px;
+    border-radius: 999px;
   }
 
   .altitude-hud__readout {
-    align-items: baseline;
-    gap: 0.7em;
-    display: flex;
     flex-direction: row;
+    align-items: baseline;
+    gap: 0.75em;
   }
 
-  .altitude-hud__label {
-    margin-bottom: 0;
-  }
-
-  .altitude-hud__value {
-    min-width: 0;
+  /* Bar becomes a hairline along the bottom of the pill */
+  .altitude-hud__track {
+    position: absolute;
+    left: 1.2em;
+    right: 1.2em;
+    bottom: 0.3em;
+    width: auto;
+    height: 1px;
   }
 }
 
@@ -1227,6 +1220,8 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
   padding-top: 0.9rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   margin-top: auto;
@@ -1254,6 +1249,7 @@ h6 {
   transition: transform 0.2s ease;
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .plc-print__action:hover {
@@ -1706,6 +1702,59 @@ h6 {
   color: var(--color-ink-muted);
 }
 
+/* Tablets: 4 candidates as a 2x2 grid instead of 3 + 1 orphan */
+@media screen and (max-width: 1100px) {
+  .probability__candidates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Phones: the pinned, one-screen-tall layout can't fit heading + 4 cards + quote,
+   so unpin it and let the section grow with its content */
+@media screen and (max-width: 767px) {
+  .probability {
+    height: auto;
+  }
+
+  .probability__sticky {
+    position: relative;
+    height: auto;
+    padding-block: 4.5rem;
+  }
+
+  .probability__inner {
+    height: auto;
+  }
+
+  .probability__heading {
+    position: static;
+    font-size: clamp(1.9rem, 8.5vw, 2.6rem);
+  }
+
+  .probability__candidates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1.75rem 0;
+  }
+
+  .probability__candidate {
+    min-height: 0;
+    padding: 1rem 0.9rem 1.1rem;
+  }
+
+  .probability__candidate-word {
+    font-size: 1.15rem;
+  }
+
+  .probability__candidate-desc {
+    font-size: 0.75rem;
+  }
+
+  .probability__takeaway {
+    font-size: 0.68rem;
+  }
+}
+
 /* --- 16. Prompt Split (Group 1 vs Group 2) --- */
 .prompt-split {
   z-index: 6;
@@ -1754,7 +1803,8 @@ h6 {
   font-weight: 500;
   line-height: 0.9;
   animation: statement-tag-cut 1s step-end infinite;
-  margin-bottom: 2rem;
+  display: inline-block; /* inline spans ignore margin-bottom; tag was touching the quote */
+  margin-bottom: 1.25rem;
 }
 
 .prompt-split__label--one {
@@ -2953,7 +3003,18 @@ h6 {
 
   .masthead__footer {
     width: 100%;
-    padding-bottom: 0;
+    padding-bottom: 4.25rem; /* clears the fixed altitude pill */
+  }
+
+  .masthead__meta {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4em;
+    text-align: center;
+  }
+
+  .masthead__meta [aria-hidden="true"] {
+    display: none;
   }
 
   .themes-grid {

@@ -104,7 +104,7 @@ export default function FlightCanvas() {
         antialias: true,
         powerPreference: 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // soft clouds: 1.5x is visually identical, ~44% fewer pixels than 2x
       renderer.setSize(window.innerWidth, window.innerHeight);
 
       scene = new THREE.Scene();
@@ -266,7 +266,7 @@ export default function FlightCanvas() {
     window.addEventListener('resize', onResize);
 
     // Animation render loop
-    let clock = new THREE.Clock();
+    const timer = new THREE.Timer(); // THREE.Clock is deprecated
 
     let throttledFrames = 0;
 
@@ -277,8 +277,9 @@ export default function FlightCanvas() {
       // (keeps a fresh frame ready for the reveal without competing for the GPU)
       if (document.documentElement.dataset.preloading && throttledFrames++ % 30 !== 0) return;
 
-      const delta = clock.getDelta();
-      const elapsed = clock.getElapsedTime();
+      timer.update();
+      const delta = timer.getDelta();
+      const elapsed = timer.getElapsed();
 
       // Update shader time uniform for subtle organic vapor drift
       if (matA) matA.uniforms.uTime.value = elapsed;

@@ -52,6 +52,8 @@ export default function FAQSection() {
               <button
                 type="button"
                 onClick={() => setOpenIdx(isOpen ? -1 : idx)}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${idx}`}
                 style={{
                   width: '100%',
                   padding: '1.6rem 2rem',
@@ -74,7 +76,7 @@ export default function FAQSection() {
               </button>
 
               {isOpen && (
-                <div style={{ padding: '0 2rem 1.8rem', borderTop: '1px dashed var(--color-border)' }}>
+                <div id={`faq-answer-${idx}`} style={{ padding: '0 2rem 1.8rem', borderTop: '1px dashed var(--color-border)' }}>
                   <p style={{ marginTop: '1.2rem', fontSize: '1rem', lineHeight: 1.7, color: 'var(--color-ink-muted)', fontFamily: 'var(--font-sans)' }}>
                     {faq.a}
                   </p>

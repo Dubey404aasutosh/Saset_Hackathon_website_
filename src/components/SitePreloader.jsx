@@ -51,11 +51,11 @@ export default function SitePreloader() {
         caption="Intelligent Battery Hackathon 2026"
         durationMs={2600}
         palette={{
-          paper: '#faf5ee',
+          paper: '#EAE0BF',
           ink: '#232424',
           sun: '#8DC0DE',
           core: '#3d7aa3',
-          glow: '#faf5ee'
+          glow: '#EAE0BF'
         }}
         fontFamily="'Playfair Display', Georgia, serif"
         height="100svh"

@@ -57,6 +57,13 @@ export default function ProbabilitySimulator() {
                 }}
                 onPointerEnter={() => setSelectedIndex(idx)}
                 onClick={() => setSelectedIndex(idx)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedIndex(idx);
+                  }
+                }}
+                aria-pressed={selectedIndex === idx}
                 tabIndex={0}
                 role="button"
               >

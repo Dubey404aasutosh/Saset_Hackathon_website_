@@ -26,7 +26,9 @@ function useFitWordmark() {
 
     const fit = () => {
       const current = parseFloat(getComputedStyle(el).fontSize) || 120;
-      const widest = Math.max(...Array.from(el.children).map((line) => line.scrollWidth), 1);
+      // offsetWidth = layout width; scrollWidth would include the floating
+      // letters' transforms (scaleX/yPercent) and mis-size the wordmark
+      const widest = Math.max(...Array.from(el.children).map((line) => line.offsetWidth), 1);
       const next = (current * box.clientWidth) / widest;
       if (Math.abs(next - current) > 0.5) setSize(next);
     };

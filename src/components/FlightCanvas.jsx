@@ -101,10 +101,10 @@ export default function FlightCanvas() {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
+        antialias: false, // soft clouds don't need MSAA
         powerPreference: 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // soft clouds: 1.5x is visually identical, ~44% fewer pixels than 2x
+      renderer.setPixelRatio(1); // soft clouds: 1x is visually near-identical and far cheaper than HiDPI
       renderer.setSize(window.innerWidth, window.innerHeight);
 
       scene = new THREE.Scene();
@@ -233,9 +233,17 @@ export default function FlightCanvas() {
     let targetCameraY = 15;
     let targetCameraZ = 35;
 
+    // Cache page height so scroll events don't force a layout read every time
+    let maxScroll = 1;
+    const measure = () => {
+      maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    };
+    measure();
+    const heightObserver = new ResizeObserver(measure);
+    heightObserver.observe(document.body);
+
     const onScroll = () => {
       const scrollY = window.scrollY;
-      const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
       const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
       // Camera descends smoothly from altitude 15 down to -105 through the cloud strata
@@ -276,6 +284,9 @@ export default function FlightCanvas() {
       // While the intro preloader covers the screen, only draw every 30th frame
       // (keeps a fresh frame ready for the reveal without competing for the GPU)
       if (document.documentElement.dataset.preloading && throttledFrames++ % 30 !== 0) return;
+      // Clouds drift slowly; 30fps is plenty and halves GPU work (and re-blurring of
+      // backdrop-filter panels layered on top of this canvas)
+      if (throttledFrames++ % 2 !== 0) return;
 
       timer.update();
       const delta = timer.getDelta();
@@ -305,6 +316,7 @@ export default function FlightCanvas() {
 
     return () => {
       cancelAnimationFrame(animFrame);
+      heightObserver.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);

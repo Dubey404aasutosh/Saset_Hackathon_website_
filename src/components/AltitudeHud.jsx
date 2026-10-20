@@ -44,7 +44,10 @@ export default function AltitudeHud() {
       setFlushedDisplay(null);
     };
 
-    const handleScroll = () => {
+    let rafId = 0;
+
+    const update = () => {
+      rafId = 0;
       const scrollY = window.scrollY;
 
       // Any real scroll (incl. the browser restoring position on reload) ends the intro flicker
@@ -53,25 +56,26 @@ export default function AltitudeHud() {
       const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
       const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
-      const currentAlt = Math.round(30000 * (1 - ratio));
-      setElevation(currentAlt);
+      setElevation(Math.round(30000 * (1 - ratio)));
 
       // Battery Cell voltage: 4.20V down to 2.85V
-      const currentVolt = (4.20 - ratio * 1.35).toFixed(2);
-      setVoltage(currentVolt);
+      setVoltage((4.20 - ratio * 1.35).toFixed(2));
       setSoc(Math.round((1 - ratio) * 100));
+    };
 
-      // Update CSS custom property for the physical track fill
-      document.documentElement.style.setProperty('--altitude-remaining', (currentAlt / 30000).toFixed(4));
+    // Coalesce scroll events into at most one update per frame
+    const handleScroll = () => {
+      if (!rafId) rafId = requestAnimationFrame(update);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     // Page height changes (fonts, footer wordmark sizing) shift the scroll ratio too
     window.addEventListener('resize', handleScroll);
-    handleScroll();
+    update();
 
     return () => {
       timeouts.forEach(t => clearTimeout(t));
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };

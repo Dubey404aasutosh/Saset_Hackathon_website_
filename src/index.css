@@ -2794,60 +2794,89 @@ h6 {
   }
 }
 
-/* Footer */
-.ground__footer {
-  text-align: center;
+/* Footer — hairline rule, credit + links row, full-width wordmark */
+.site-footer {
+  border-top: 1px solid var(--color-ink);
+  padding-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.site-footer__bar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75em;
-  margin-top: 0;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(2.5rem, 6vw, 5rem);
 }
 
-.ground__maker,
-.ground__copyright {
-  background: var(--color-yellow);
-  color: var(--color-ink);
-  font-family: var(--font-label);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  clip-path: polygon(0% 3%, 99% 1%, 100% 97%, 1% 99%);
-  padding: 0.85em 1.3em 0.75em;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.ground__maker {
-  align-items: center;
-  gap: 0.6em;
-  font-size: min(var(--type-label-sm), 11px);
-  text-decoration: none;
-  animation: statement-tag-cut 1s step-end infinite;
-  display: inline-flex;
-}
-
-.ground__maker:hover {
-  background: var(--color-orange);
-}
-
-.ground__copyright {
-  white-space: nowrap;
+.site-footer__credit {
   margin: 0;
-  font-size: min(var(--type-label-sm), 10px);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
 }
 
-.ground__privacy {
-  color: inherit;
-  text-underline-offset: 0.18em;
-  border-left: 1px solid;
-  margin-left: 0.9em;
-  padding-left: 0.9em;
-  font-size: 0.9em;
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem clamp(1.25rem, 3vw, 3rem);
+}
+
+.site-footer__link {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-footer__link:hover,
+.site-footer__link:focus-visible {
+  color: var(--color-ink);
   text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 
-.ground__privacy:hover {
-  text-decoration-thickness: 2px;
+.site-footer__wordmark-link {
+  display: block;
+  width: 100%;
+  overflow: hidden; /* clips letters while they float up from below */
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+/* font-size is set inline by useFitWordmark so the longest line fills the width */
+.site-footer__wordmark {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+  color: inherit;
+}
+
+.site-footer__wordmark-line {
+  display: block;
+  width: max-content;
+  white-space: nowrap;
+  padding-bottom: 0.04em; /* room for descenders (y, g) */
+}
+
+.site-footer__char {
+  display: inline-block;
+}
+
+.site-footer__wordmark-link:hover .site-footer__wordmark-line:last-child {
+  color: var(--color-red);
+}
+
+@media (max-width: 640px) {
+  .site-footer__bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* --- 23. Motion Preferences --- */
@@ -2864,7 +2893,6 @@ h6 {
 
   .statement__tag,
   .maya-spectrum__label,
-  .ground__maker,
   .scroll-reveal-boxed-word,
   .masthead__badge,
   .theme-card__idx,

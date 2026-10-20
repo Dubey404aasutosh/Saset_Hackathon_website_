@@ -96,7 +96,6 @@ export default function FlightCanvas() {
     let renderer, scene, camera, animFrame;
     let cloudPlanes = [];
     let matA, matB;
-    let airlinerMesh, jetStreamMesh;
 
     try {
       renderer = new THREE.WebGLRenderer({
@@ -225,35 +224,6 @@ export default function FlightCanvas() {
       groundMesh.position.set(0, -115, -60);
       scene.add(groundMesh);
 
-      // High-altitude airliner & jet stream contrail
-      const airlinerTexture = loader.load('/brand/gpc/airliner-gpc-color-block.png');
-      const jetStreamTexture = loader.load('/brand/gpc/flight/jet-stream-magnific.png');
-
-      const airlinerGeo = new THREE.PlaneGeometry(24, 9.6);
-      const airlinerMat = new THREE.MeshBasicMaterial({
-        map: airlinerTexture,
-        transparent: true,
-        opacity: 0.95,
-        depthWrite: false
-      });
-      airlinerMesh = new THREE.Mesh(airlinerGeo, airlinerMat);
-      airlinerMesh.position.set(-8, 19, -20);
-      airlinerMesh.rotation.z = 0.02;
-      scene.add(airlinerMesh);
-
-      const jetStreamGeo = new THREE.PlaneGeometry(42, 8.5);
-      const jetStreamMat = new THREE.MeshBasicMaterial({
-        map: jetStreamTexture,
-        transparent: true,
-        opacity: 0.75,
-        depthWrite: false
-      });
-      jetStreamMesh = new THREE.Mesh(jetStreamGeo, jetStreamMat);
-      jetStreamMesh.scale.x = -1; // flip so the narrow nozzle attaches to the airplane engines
-      jetStreamMesh.position.set(-34, 18.2, -21);
-      jetStreamMesh.rotation.z = 0.02;
-      scene.add(jetStreamMesh);
-
     } catch (e) {
       console.error('WebGL flight canvas init failed:', e);
       return;
@@ -320,16 +290,6 @@ export default function FlightCanvas() {
         if (cp.mesh.position.x > cp.maxX) cp.mesh.position.x = cp.minX;
         if (cp.mesh.position.x < cp.minX) cp.mesh.position.x = cp.maxX;
       });
-
-      // Cruising airliner with billowing contrail
-      if (airlinerMesh && jetStreamMesh) {
-        airlinerMesh.position.x += 0.012 * (delta * 60);
-        jetStreamMesh.position.x = airlinerMesh.position.x - 26;
-        if (airlinerMesh.position.x > 80) {
-          airlinerMesh.position.x = -80;
-          jetStreamMesh.position.x = -106;
-        }
-      }
 
       renderer.render(scene, camera);
     };

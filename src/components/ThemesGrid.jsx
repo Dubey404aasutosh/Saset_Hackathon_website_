@@ -131,147 +131,11 @@ export function pad2(n) {
   return n < 10 ? '0' + n : String(n);
 }
 
-/** Uniform Engineering Vector Schematics for all 8 Problem Statements */
-function ThemeVisual({ type, active }) {
-  const stroke = active ? '#232424' : '#6b7280';
-  const accent = active ? '#f94e2a' : '#9ca3af';
-  const grid = active ? 'rgba(35,36,36,0.08)' : 'rgba(35,36,36,0.04)';
-
-  return (
-    <div className="plc-shot">
-      <svg
-        viewBox="0 0 280 200"
-        className="plc-shot__svg"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Engineering Millimeter Grid */}
-        <defs>
-          <pattern id={`tech-grid-${type}`} width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke={grid} strokeWidth="0.8" />
-          </pattern>
-        </defs>
-        <rect width="280" height="200" fill="#f4efe6" />
-        <rect width="280" height="200" fill={`url(#tech-grid-${type})`} />
-
-        {/* Viewfinder Corner Reticles */}
-        <path d="M 12 24 V 12 H 24 M 268 24 V 12 H 256 M 12 176 V 188 H 24 M 268 176 V 188 H 256" stroke={stroke} strokeWidth="1.2" opacity="0.6" />
-
-        {/* Specific Domain Technical Schematic */}
-        {type === 'bms' && (
-          <g transform="translate(40, 30)">
-            <rect x="20" y="20" width="160" height="100" rx="3" stroke={stroke} strokeWidth="1.5" fill="#faf7f2" />
-            <rect x="55" y="45" width="90" height="50" rx="2" stroke={accent} strokeWidth="1.5" strokeDasharray="3 2" fill="rgba(249,78,42,0.05)" />
-            <circle cx="100" cy="70" r="14" stroke={accent} strokeWidth="2" />
-            <path d="M 94 70 L 98 74 L 108 64" stroke={accent} strokeWidth="2" strokeLinecap="round" />
-            <line x1="0" y1="50" x2="20" y2="50" stroke={stroke} strokeWidth="1.5" />
-            <line x1="0" y1="90" x2="20" y2="90" stroke={stroke} strokeWidth="1.5" />
-            <line x1="180" y1="50" x2="200" y2="50" stroke={stroke} strokeWidth="1.5" />
-            <line x1="180" y1="90" x2="200" y2="90" stroke={stroke} strokeWidth="1.5" />
-            <path d="M 40 30 H 70 M 130 30 H 160" stroke={stroke} strokeWidth="1" strokeDasharray="2 2" />
-            <text x="100" y="110" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">EDGE-AI SoC/SoH</text>
-          </g>
-        )}
-
-        {type === 'safety' && (
-          <g transform="translate(40, 25)">
-            <circle cx="100" cy="75" r="55" stroke={stroke} strokeWidth="1.2" strokeDasharray="4 3" />
-            <circle cx="100" cy="75" r="38" stroke={accent} strokeWidth="1.8" fill="rgba(246,111,0,0.06)" />
-            <circle cx="100" cy="75" r="16" fill={accent} opacity="0.85" />
-            <line x1="100" y1="10" x2="100" y2="30" stroke={accent} strokeWidth="2" />
-            <line x1="100" y1="120" x2="100" y2="140" stroke={accent} strokeWidth="2" />
-            <line x1="35" y1="75" x2="55" y2="75" stroke={accent} strokeWidth="2" />
-            <line x1="145" y1="75" x2="165" y2="75" stroke={accent} strokeWidth="2" />
-            <path d="M 75 50 L 125 100 M 75 100 L 125 50" stroke={stroke} strokeWidth="1" strokeDasharray="2 2" />
-            <text x="100" y="146" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">THERMAL VENT &lt; 250ms</text>
-          </g>
-        )}
-
-        {type === 'charging' && (
-          <g transform="translate(40, 30)">
-            <line x1="10" y1="110" x2="190" y2="110" stroke={stroke} strokeWidth="1.2" />
-            <line x1="10" y1="20" x2="10" y2="110" stroke={stroke} strokeWidth="1.2" />
-            <path d="M 10 100 Q 40 20 75 60 T 140 40 T 190 25" stroke={accent} strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            <path d="M 10 100 L 40 60 L 60 75 L 90 35 L 115 55 L 150 20 L 190 25" stroke={stroke} strokeWidth="1" strokeDasharray="3 2" fill="none" />
-            <path d="M 98 62 L 106 50 L 102 62 L 112 62 L 96 82 L 100 68 Z" fill={accent} stroke={stroke} strokeWidth="0.8" />
-            <text x="100" y="128" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">DYNAMIC PULSE +35%</text>
-          </g>
-        )}
-
-        {type === 'grid' && (
-          <g transform="translate(40, 25)">
-            <path d="M 45 125 L 80 30 L 115 125" stroke={stroke} strokeWidth="1.8" />
-            <path d="M 95 125 L 130 30 L 165 125" stroke={stroke} strokeWidth="1.8" />
-            <line x1="55" y1="75" x2="105" y2="75" stroke={accent} strokeWidth="1.5" />
-            <line x1="105" y1="75" x2="155" y2="75" stroke={accent} strokeWidth="1.5" />
-            <line x1="65" y1="100" x2="95" y2="100" stroke={stroke} strokeWidth="1.2" />
-            <line x1="115" y1="100" x2="145" y2="100" stroke={stroke} strokeWidth="1.2" />
-            <circle cx="80" cy="30" r="4.5" fill={accent} />
-            <circle cx="130" cy="30" r="4.5" fill={accent} />
-            <path d="M 20 135 Q 100 135 190 135" stroke={stroke} strokeWidth="1" />
-            <text x="100" y="146" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">GRID BUFFER 50.00Hz</text>
-          </g>
-        )}
-
-        {type === 'twin' && (
-          <g transform="translate(40, 30)">
-            <rect x="15" y="25" width="65" height="70" rx="2" stroke={stroke} strokeWidth="1.5" fill="#faf7f2" />
-            <rect x="120" y="25" width="65" height="70" rx="2" stroke={accent} strokeWidth="1.5" strokeDasharray="3 2" fill="rgba(249,78,42,0.04)" />
-            <path d="M 85 60 H 115" stroke={accent} strokeWidth="2" />
-            <polygon points="115,60 108,56 108,64" fill={accent} />
-            <path d="M 25 75 C 38 45 55 45 70 75" stroke={stroke} strokeWidth="1.6" fill="none" />
-            <path d="M 130 75 C 143 45 160 45 175 75" stroke={accent} strokeWidth="2" fill="none" />
-            <text x="100" y="118" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">PDE ⇄ NEURAL 10,000x</text>
-          </g>
-        )}
-
-        {type === 'iot' && (
-          <g transform="translate(40, 25)">
-            <circle cx="100" cy="75" r="14" fill={accent} />
-            <path d="M 100 48 A 27 27 0 0 1 127 75" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
-            <path d="M 73 75 A 27 27 0 0 1 100 48" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
-            <path d="M 100 30 A 45 45 0 0 1 145 75" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeDasharray="4 3" />
-            <path d="M 55 75 A 45 45 0 0 1 100 30" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeDasharray="4 3" />
-            <circle cx="45" cy="115" r="5" stroke={stroke} strokeWidth="1.5" fill="#faf7f2" />
-            <circle cx="155" cy="115" r="5" stroke={stroke} strokeWidth="1.5" fill="#faf7f2" />
-            <line x1="45" y1="115" x2="90" y2="82" stroke={stroke} strokeWidth="1" strokeDasharray="2 2" />
-            <line x1="155" y1="115" x2="110" y2="82" stroke={stroke} strokeWidth="1" strokeDasharray="2 2" />
-            <text x="100" y="146" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">WIRELESS EIS &lt; 12ms</text>
-          </g>
-        )}
-
-        {type === 'chem' && (
-          <g transform="translate(40, 25)">
-            <polygon points="100,25 145,50 145,100 100,125 55,100 55,50" stroke={stroke} strokeWidth="1.8" fill="#faf7f2" />
-            <polygon points="100,40 130,57 130,93 100,110 70,93 70,57" stroke={accent} strokeWidth="1.5" strokeDasharray="3 2" fill="rgba(155,51,143,0.06)" />
-            <circle cx="100" cy="75" r="18" fill={accent} />
-            <text x="100" y="81" textAnchor="middle" fill="#fff" fontSize="13" fontWeight="bold" fontFamily="sans-serif">Na⁺</text>
-            <text x="100" y="146" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">SODIUM-ION 100% INDIA</text>
-          </g>
-        )}
-
-        {type === 'defense' && (
-          <g transform="translate(40, 25)">
-            <path d="M 100 25 L 150 45 V 85 C 150 112 100 130 100 130 C 100 130 50 112 50 85 V 45 Z" stroke={stroke} strokeWidth="1.8" fill="#faf7f2" />
-            <path d="M 100 38 L 135 52 V 80 C 135 100 100 114 100 114 C 100 114 65 100 65 80 V 52 Z" stroke={accent} strokeWidth="1.5" fill="rgba(249,78,42,0.06)" />
-            <path d="M 90 75 L 97 82 L 112 65" stroke={accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <text x="100" y="146" textAnchor="middle" fill={stroke} fontSize="8" fontFamily="monospace" letterSpacing="1">EMP SHIELD · -40°C</text>
-          </g>
-        )}
-
-        {/* Technical Sub-label in Top Left */}
-        <text x="16" y="24" fill={stroke} fontSize="7" fontFamily="monospace" opacity="0.7">FIG-{type.toUpperCase()}</text>
-        <text x="264" y="24" textAnchor="end" fill={accent} fontSize="7" fontFamily="monospace" fontWeight="bold">REF.08</text>
-      </svg>
-    </div>
-  );
-}
-
 export default function ThemesGrid() {
   const n = HACKATHON_THEMES.length;
   const [active, setActive] = useState(0);
   const [dragging, setDragging] = useState(false);
-  const [size, setSize] = useState({ w: 1200, h: 620, cw: 290 });
+  const [size, setSize] = useState({ w: 1200, h: 640, cw: 330 });
 
   const rootRef = useRef(null);
   const pathRef = useRef(null);
@@ -281,9 +145,9 @@ export default function ThemesGrid() {
   const lastTouch = useRef(0);
   const activeRef = useRef(0);
 
-  const sag = 38; // Sagging distance of string in px
+  const sag = 34; // Sagging distance of string in px
   const swingGain = 1.0;
-  const spacing = size.cw * 1.12;
+  const spacing = size.cw * 1.14;
 
   const goTo = useCallback(
     (idx) => {
@@ -299,8 +163,7 @@ export default function ThemesGrid() {
 
     const ro = new ResizeObserver(() => {
       const rect = root.getBoundingClientRect();
-      // Keep cardWidth well within height bounds so it never clips
-      const cw = Math.round(Math.max(240, Math.min(310, rect.width * 0.38, rect.height * 0.48)));
+      const cw = Math.round(Math.max(280, Math.min(350, rect.width * 0.42, rect.height * 0.54)));
       setSize({ w: rect.width, h: rect.height, cw });
     });
 
@@ -333,7 +196,7 @@ export default function ThemesGrid() {
       prev = now;
 
       const { w, h, cw } = size;
-      const y0 = Math.max(45, h * 0.16);
+      const y0 = Math.max(50, h * 0.14);
       const d = drag.current;
 
       let lineVel = 0;
@@ -544,7 +407,7 @@ export default function ThemesGrid() {
           />
         </svg>
 
-        {/* Pegged Prints (All 8 Themes) */}
+        {/* Pegged Prints (All 8 Themes) - Clean Typography & Problem Statement */}
         {HACKATHON_THEMES.map((theme, i) => {
           const isActive = i === active;
           return (
@@ -561,20 +424,43 @@ export default function ThemesGrid() {
                 <div className="plc-peg__groove" />
               </div>
 
-              {/* Physical Polaroid Dossier Print */}
+              {/* Physical Polaroid Dossier Print - Clean PS Description */}
               <div className="plc-print">
-                {/* Visual Viewport with Uniform Engineering Schematic */}
-                <ThemeVisual type={theme.schematicType} active={isActive} />
-
-                {/* Hand-Stamped Dossier Note Strip */}
-                <div className="plc-note">
+                {/* 1. Header with Badge & Serial */}
+                <div className="plc-print__header">
                   <span
-                    className="plc-note__tag"
+                    className="plc-print__tag"
                     style={{ background: theme.badgeColor }}
                   >
-                    {theme.id}
+                    {theme.id} / THEME
                   </span>
-                  <span className="plc-note__title">{theme.title}</span>
+                  <span className="plc-print__serial">CELL 4.0 · DOMAIN {theme.id}</span>
+                </div>
+
+                {/* 2. Bold Editorial Heading */}
+                <h3 className="plc-print__title">{theme.title}</h3>
+
+                {/* 3. Target Metric Banner */}
+                <div className="plc-print__metric-line">
+                  <span className="plc-print__metric-label">{theme.metricLabel}:</span>
+                  <b className="plc-print__metric-val">{theme.metricVal}</b>
+                </div>
+
+                {/* 4. Full Explanatory Problem Statement Description */}
+                <p className="plc-print__desc">{theme.desc}</p>
+
+                {/* 5. Footer with Category Tag & Action Link */}
+                <div className="plc-print__footer">
+                  <span className="plc-print__category">
+                    {theme.tag}
+                  </span>
+                  <a
+                    href="#register"
+                    className="plc-print__action"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    SELECT THEME →
+                  </a>
                 </div>
               </div>
             </div>

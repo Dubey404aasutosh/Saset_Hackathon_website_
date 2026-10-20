@@ -2,9 +2,9 @@ import React from 'react';
 import FlightCanvas from './components/FlightCanvas';
 import AltitudeHud from './components/AltitudeHud';
 import Masthead from './components/Masthead';
+import CloudscapeTransition from './components/CloudscapeTransition';
 import ScrollRevealText from './components/ScrollRevealText';
 import Statement from './components/Statement';
-import BatteryEvolutionChart from './components/BatteryEvolutionChart';
 import ProbabilitySimulator from './components/ProbabilitySimulator';
 import PromptSplit from './components/PromptSplit';
 import ThemesGrid from './components/ThemesGrid';
@@ -26,6 +26,9 @@ export default function App() {
 
       {/* Hero Masthead with Dynamic Brand Mark Cycler & Nav */}
       <Masthead />
+
+      {/* Atmospheric Cloudscape Mist Continuous Flow Transition (Option B) */}
+      <CloudscapeTransition />
 
       {/* Opening Manifesto — Word-by-Word Progressive Scroll Reveal */}
       <section className="article-intro" aria-label="Hackathon introduction">
@@ -56,9 +59,6 @@ export default function App() {
 
       {/* Core Hackathon Themes Grid (All 8 Themes) */}
       <ThemesGrid />
-
-      {/* Battery Cycle Life & AI Optimization SVG Chart */}
-      <BatteryEvolutionChart />
 
       {/* Interactive Probability / Bottleneck Simulator */}
       <ProbabilitySimulator />

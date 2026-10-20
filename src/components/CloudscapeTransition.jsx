@@ -311,13 +311,13 @@ export default function CloudscapeTransition({
         <div ref={flightRef} className="cloud-transition-flight" style={{ visibility: 'hidden' }}>
           <div className="cloud-transition-trail-wrapper">
             <img
-              src="/brand/gpc/flight/jet-stream-magnific.png"
+              src="/brand/art/flight/jet-stream-magnific.png"
               className="cloud-transition-trail"
               alt=""
             />
           </div>
           <img
-            src="/brand/gpc/airliner-gpc-color-block.png"
+            src="/brand/art/airliner-color-block.png"
             className="cloud-transition-plane"
             alt=""
           />

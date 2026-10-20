@@ -347,36 +347,77 @@ h6 {
 }
 
 /* --- 8. Altitude & Telemetry HUD --- */
-/* Compact frosted chip so it stays legible over any section:
-   bottom-left on tablets/desktops, a single-line pill on phones. */
+/* --- 8. Altitude & Telemetry HUD --- */
+/* High-visibility tactile card pinned to the left edge at 50% vertical center */
 .altitude-hud {
   position: fixed;
-  z-index: 10;
-  left: clamp(0.75rem, 1.5vw, 1.5rem);
-  bottom: clamp(0.75rem, 1.5vw, 1.5rem);
+  z-index: 100;
+  top: 50%;
+  left: clamp(1rem, 2.5vw, 2.25rem);
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 0.6em;
-  padding: 0.75em 0.9em 0.8em;
+  gap: 0;
+  padding: 0.85rem 1.15rem 0.95rem;
   color: var(--color-ink);
-  background: rgba(250, 245, 238, 0.8);
-  -webkit-backdrop-filter: blur(10px) saturate(1.2);
-  backdrop-filter: blur(10px) saturate(1.2);
+  background: rgba(250, 245, 238, 0.94);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
   border: 1px solid rgba(35, 36, 36, 0.12);
-  border-radius: 4px;
-  box-shadow: 0 6px 18px rgba(35, 36, 36, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(35, 36, 36, 0.10), 0 4px 10px -2px rgba(35, 36, 36, 0.05);
   pointer-events: none;
   font-family: var(--font-label);
-  font-size: 13px;
   user-select: none;
+  min-width: 140px;
 }
 
-/* Remaining-altitude bar */
+.altitude-hud__readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.altitude-hud__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.altitude-hud__value {
+  font-family: var(--font-label);
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-ink);
+  white-space: nowrap;
+  display: block;
+}
+
+.altitude-hud__battery-gauge {
+  font-size: 0.8rem;
+  color: var(--color-red);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-bottom: 0.55rem;
+}
+
+/* Horizontal Remaining-altitude bar at bottom of card */
 .altitude-hud__track {
-  order: 2;
   width: 100%;
-  height: 2px;
-  background: rgba(35, 36, 36, 0.12);
+  height: 3px;
+  background: rgba(35, 36, 36, 0.14);
+  border-radius: 2px;
   position: relative;
   overflow: hidden;
 }
@@ -385,45 +426,8 @@ h6 {
   position: absolute;
   inset: 0;
   background: var(--color-red);
-  transform: scaleX(var(--altitude-remaining, 1));
   transform-origin: 0 50%;
-}
-
-.altitude-hud__readout {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4em;
-}
-
-.altitude-hud__label {
-  font-size: 0.7em;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--color-ink-muted);
-}
-
-.altitude-hud__value {
-  min-width: 9ch;
-  font-family: var(--font-label);
-  font-size: 1em;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
-  display: block;
-}
-
-.altitude-hud__battery-gauge {
-  font-size: 0.78em;
-  color: var(--color-red);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
+  transition: transform 0.08s linear;
 }
 
 .altitude-hud[data-locked="true"] .altitude-hud__value {
@@ -439,12 +443,14 @@ h6 {
 
 @media screen and (max-width: 767px) {
   .altitude-hud {
+    top: auto;
     left: 50%;
     bottom: max(0.75rem, env(safe-area-inset-bottom));
     transform: translateX(-50%);
     padding: 0.55em 1em 0.65em;
     font-size: 12px;
     border-radius: 999px;
+    min-width: auto;
   }
 
   .altitude-hud__readout {
@@ -453,7 +459,10 @@ h6 {
     gap: 0.75em;
   }
 
-  /* Bar becomes a hairline along the bottom of the pill */
+  .altitude-hud__battery-gauge {
+    margin-bottom: 0;
+  }
+
   .altitude-hud__track {
     position: absolute;
     left: 1.2em;
@@ -516,18 +525,22 @@ h6 {
   transition: transform 0.26s var(--ease-brand), color 0.26s var(--ease-brand);
 }
 
-.masthead__brand svg {
-  width: 3.25em;
-  height: auto;
+.masthead__brand-mark {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--color-ink);
+  white-space: nowrap;
   transition: color 0.26s var(--ease-brand), transform 0.26s var(--ease-brand);
   display: block;
 }
 
 @media (hover: hover) and (pointer: fine) {
 
-  .masthead__brand:hover svg,
-  .masthead__brand:focus-visible svg {
+  .masthead__brand:hover .masthead__brand-mark,
+  .masthead__brand:focus-visible .masthead__brand-mark {
     color: var(--brand-mark-hue, var(--color-red));
     transform: scale(0.93);
   }
@@ -3023,8 +3036,8 @@ h6 {
 }
 
 @media screen and (max-width: 479px) {
-  .masthead__brand svg {
-    width: 2.75em;
+  .masthead__brand-mark {
+    font-size: 1.5rem;
   }
 
   .masthead__brand-tag {

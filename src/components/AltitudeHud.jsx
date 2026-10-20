@@ -82,7 +82,7 @@ export default function AltitudeHud() {
   return (
     <aside className="altitude-hud" aria-label="Current story elevation & cell telemetry">
       <div className="altitude-hud__track" aria-hidden="true">
-        <span />
+        <span style={{ transform: `scaleY(${soc / 100})` }} />
       </div>
       <div className="altitude-hud__readout">
         <span className="altitude-hud__label">Altitude</span>

@@ -120,9 +120,9 @@ export default function FlightCanvas() {
 
       // Texture loader for authentic cloud bank cutouts
       const loader = new THREE.TextureLoader();
-      const textureA = loader.load('/brand/gpc/clouds/cloud-bank-a.png');
-      const textureB = loader.load('/brand/gpc/clouds/cloud-bank-b.png');
-      const groundTexture = loader.load('/brand/gpc/flight/mountain-ground-cutout.png');
+      const textureA = loader.load('/brand/art/clouds/cloud-bank-a.png');
+      const textureB = loader.load('/brand/art/clouds/cloud-bank-b.png');
+      const groundTexture = loader.load('/brand/art/flight/mountain-ground-cutout.png');
 
       textureA.wrapS = textureA.wrapT = THREE.ClampToEdgeWrapping;
       textureB.wrapS = textureB.wrapT = THREE.ClampToEdgeWrapping;

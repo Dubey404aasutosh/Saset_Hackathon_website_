@@ -25,7 +25,7 @@ export default function PromptSplit() {
 
           <div className="prompt-split__paper-stage">
             <img
-              src="/brand/gpc/props/conventional-battery-schematic.svg"
+              src="/brand/art/props/conventional-battery-schematic.svg"
               alt="Conventional battery schematic with blind thermal core"
               className={`prompt-split__sketch-img ${activeLayer1 ? 'is-crumpled' : ''}`}
             />
@@ -34,7 +34,7 @@ export default function PromptSplit() {
               className="prompt-split__tool-badge"
               onClick={() => setActiveLayer1(!activeLayer1)}
             >
-              <img src="/brand/gpc/props/vintage-fountain-pen.png" alt="" style={{ width: '18px', height: 'auto' }} />
+              <img src="/brand/art/props/vintage-fountain-pen.png" alt="" style={{ width: '18px', height: 'auto' }} />
               <span>{activeLayer1 ? 'Inspect Normal View' : 'Highlight Thermal Hotspot'}</span>
             </button>
           </div>
@@ -54,7 +54,7 @@ export default function PromptSplit() {
 
           <div className="prompt-split__paper-stage">
             <img
-              src="/brand/gpc/props/intelligent-cell-schematic.svg"
+              src="/brand/art/props/intelligent-cell-schematic.svg"
               alt="Intelligent Cell 4.0 schematic with optical fiber and edge BMS"
               className={`prompt-split__sketch-img ${activeLayer2 ? 'is-crumpled' : ''}`}
             />
@@ -63,7 +63,7 @@ export default function PromptSplit() {
               className="prompt-split__tool-badge"
               onClick={() => setActiveLayer2(!activeLayer2)}
             >
-              <img src="/brand/gpc/props/vintage-scissors.png" alt="" style={{ width: '18px', height: 'auto' }} />
+              <img src="/brand/art/props/vintage-scissors.png" alt="" style={{ width: '18px', height: 'auto' }} />
               <span>{activeLayer2 ? 'Default Blueprint' : 'Activate AI Sensor Spine'}</span>
             </button>
           </div>

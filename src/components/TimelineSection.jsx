@@ -2,32 +2,32 @@ import React from 'react';
 
 const TIMELINE_STEPS = [
   {
-    phase: 'PHASE 01',
+    phase: 'STEP 01',
     date: '09 OCT 2026',
-    status: 'ACTIVE NOW',
-    title: 'Registration & EOI Opens',
-    desc: 'Expression of Interest (EOI) is officially floated across national universities, research labs, and startups. Portal open for team submissions.'
+    status: 'OPEN NOW',
+    title: 'Registration Opens',
+    desc: 'Registration is open. The Expression of Interest (EOI) has been floated.'
   },
   {
-    phase: 'PHASE 02',
+    phase: 'STEP 02',
     date: '30 OCT 2026',
-    status: 'HARD DEADLINE',
+    status: 'DEADLINE',
     title: 'Registration Deadline',
-    desc: 'Final cutoff for initial abstract proposals, team rosters, and theme domain selections. Screening of applications begins immediately.'
+    desc: 'Last date to register for the hackathon.'
   },
   {
-    phase: 'PHASE 03',
-    date: 'NOV 2026',
-    status: 'INCUBATION & DEV',
-    title: 'Mentoring & Rapid Prototyping',
-    desc: 'Shortlisted applicants receive technical mentoring from leading battery scientists, digital twin architects, and electrochemical patent holders.'
+    phase: 'STEP 03',
+    date: 'IN BETWEEN',
+    status: 'BEFORE GRAND FINALE',
+    title: 'Mentoring, Product Development & Screening',
+    desc: 'Mentoring, product development and screening will be completed before the Grand Finale. Mentoring sessions are for shortlisted applicants.'
   },
   {
-    phase: 'PHASE 04',
+    phase: 'STEP 04',
     date: '01 DEC 2026',
-    status: 'TENTATIVE ANNOUNCEMENT',
-    title: 'Grand Finale Showcase',
-    desc: 'Final live prototype evaluation, investor jury pitches, award of ₹2 Lakh prize money, and incubation partner onboarding.'
+    status: 'TENTATIVE',
+    title: 'Grand Finale Announcement',
+    desc: 'The final Grand Finale will be announced on 1 December 2026 (tentative).'
   }
 ];
 
@@ -36,11 +36,11 @@ export default function TimelineSection() {
     <section className="timeline-section" id="timeline">
       <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto' }}>
         <p className="article-block__chapter-label article-block__chapter-label--yellow">
-          02 / Important Milestones
+          02 / Important Dates
         </p>
-        <h2 className="article-block__heading">Critical Timeline & Roadmap</h2>
+        <h2 className="article-block__heading">Important Dates</h2>
         <p style={{ color: 'var(--color-ink-muted)', fontSize: '1.1rem' }}>
-          Mark these mandatory deadlines to ensure your team qualifies for mentorship and finale consideration.
+          Register before 30 October 2026.
         </p>
       </div>
 

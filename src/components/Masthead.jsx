@@ -61,9 +61,9 @@ export default function Masthead() {
         <div className="masthead__content">
           <div className="masthead__badge-row">
             <span className="masthead__badge masthead__badge--live">EOI Floated (Live Now)</span>
-            <span className="masthead__badge">National Security Domain</span>
-            <span className="masthead__badge">Up to ₹2,00,000 Cash Prizes</span>
-            <span className="masthead__badge">Lab Incubation</span>
+            <span className="masthead__badge">8 Themes</span>
+            <span className="masthead__badge">Up to ₹2 Lakh Cash Prizes</span>
+            <span className="masthead__badge">Mentoring &amp; Incubation</span>
           </div>
 
           <h1 className="masthead__title-semantic">
@@ -73,7 +73,7 @@ export default function Masthead() {
           </h1>
 
           <p className="masthead__dek">
-            Bringing together India's sharpest students, deeptech startups, and MSMEs to develop innovative solutions for the future of battery technology using Artificial Intelligence.
+            Bringing participants together to develop innovative solutions for the future of battery technology, using AI to advance battery safety, sustainability, and indigenous innovation.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function Masthead() {
             <span aria-hidden="true">·</span>
             <span>Deadline: 30 Oct 2026</span>
             <span aria-hidden="true">·</span>
-            <span>Grand Finale: 01 Dec 2026</span>
+            <span>Grand Finale Announcement: 01 Dec 2026 (Tentative)</span>
           </p>
         </div>
 

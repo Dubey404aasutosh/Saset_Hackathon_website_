@@ -268,8 +268,14 @@ export default function FlightCanvas() {
     // Animation render loop
     let clock = new THREE.Clock();
 
+    let throttledFrames = 0;
+
     const animate = () => {
       animFrame = requestAnimationFrame(animate);
+
+      // While the intro preloader covers the screen, only draw every 30th frame
+      // (keeps a fresh frame ready for the reveal without competing for the GPU)
+      if (document.documentElement.dataset.preloading && throttledFrames++ % 30 !== 0) return;
 
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();

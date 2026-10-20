@@ -3,98 +3,74 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 export const HACKATHON_THEMES = [
   {
     id: '01',
-    code: 'BMS-AI',
-    title: 'Intelligent Battery Management Systems (BMS)',
-    subtitle: 'Edge AI State Estimation & Embedded Microcontrollers',
-    desc: 'Next-generation algorithmic state estimation (SoC, SoH, SoP) with adaptive machine learning models on edge microcontrollers.',
-    tag: 'Core AI Track',
+    code: 'BMS',
+    title: 'Intelligent Battery Management Systems',
+    desc: 'Using AI to build intelligent battery management systems.',
+    tag: 'Battery Management',
     badgeColor: '#f94e2a',
-    metricLabel: 'TARGET ACCURACY',
-    metricVal: '> 98.8% SoC',
     schematicType: 'bms'
   },
   {
     id: '02',
-    code: 'THM-RUN',
-    title: 'Battery Safety & Thermal Runaway Mitigation',
-    subtitle: 'Multi-Physics Early Warning & Gas Vent Detection',
-    desc: 'Multi-physics early-warning detection systems, vapor pressure venting triggers, and passive/active propagation barriers.',
-    tag: 'Safety Critical',
+    code: 'SAFETY',
+    title: 'Battery Safety',
+    desc: 'Using AI to advance battery safety.',
+    tag: 'Safety',
     badgeColor: '#f66f00',
-    metricLabel: 'VENT DETECTION',
-    metricVal: '< 250ms',
     schematicType: 'safety'
   },
   {
     id: '03',
-    code: 'CHG-CYC',
-    title: 'Smart Charging & Second-Life Cascading',
-    subtitle: 'Dynamic Pulse Protocols & Stationary Storage',
-    desc: 'Dynamic pulse charging protocols, health-conscious fast charging, and algorithmic sorting of retired EV modules for stationary storage.',
-    tag: 'Circular Economy',
+    code: 'CHARGE',
+    title: 'Smart Charging & Second-Life Applications',
+    desc: 'Using AI for smart charging and second-life applications of batteries.',
+    tag: 'Charging & Second Life',
     badgeColor: '#9b338f',
-    metricLabel: 'CYCLE LIFE GAIN',
-    metricVal: '+35% Life',
     schematicType: 'charging'
   },
   {
     id: '04',
-    code: 'GRD-STG',
-    title: 'Renewable Energy Grid Storage',
-    subtitle: 'High-Inertia Buffer Storage & Microgrid Integration',
-    desc: 'High-inertia buffer storage algorithms, microgrid coordination, and utility-scale integration with solar and wind variability.',
-    tag: 'Grid Infrastructure',
+    code: 'STORAGE',
+    title: 'Renewable Energy Storage',
+    desc: 'Using AI to advance battery-based renewable energy storage.',
+    tag: 'Energy Storage',
     badgeColor: '#ffc013',
-    metricLabel: 'FREQUENCY LOCK',
-    metricVal: '50.00 Hz',
     schematicType: 'grid'
   },
   {
     id: '05',
-    code: 'DIG-TWN',
-    title: 'Battery Diagnostics & Physics Digital Twins',
-    subtitle: 'Electrochemical PDE Coupling & Neural Surrogates',
-    desc: 'Coupling electrochemical partial differential equations with neural surrogate models for non-invasive degradation mapping.',
-    tag: 'Digital Twin',
+    code: 'TWIN',
+    title: 'Battery Diagnostics & Digital Twins',
+    desc: 'Using AI for battery diagnostics and digital twins.',
+    tag: 'Diagnostics',
     badgeColor: '#f94e2a',
-    metricLabel: 'SOLVER SPEEDUP',
-    metricVal: '10,000x',
     schematicType: 'twin'
   },
   {
     id: '06',
-    code: 'IOT-EIS',
-    title: 'IoT-Enabled Wireless Monitoring',
-    subtitle: 'Cell-Level EIS & Ultra-Low Power Sensor Mesh',
-    desc: 'Cell-level impedance spectroscopy, ultra-low power wireless sensor mesh networks, and cloud telemetry pipelines.',
-    tag: 'Hardware & IoT',
+    code: 'IOT',
+    title: 'IoT-Enabled Monitoring',
+    desc: 'Using AI with IoT-enabled monitoring of batteries.',
+    tag: 'IoT Monitoring',
     badgeColor: '#f66f00',
-    metricLabel: 'MESH LATENCY',
-    metricVal: '< 12ms',
     schematicType: 'iot'
   },
   {
     id: '07',
-    code: 'NAT-MAT',
-    title: 'Indigenous Battery Chemistries',
-    subtitle: 'Domestic Sodium-Ion & Non-Critical Supply Chains',
-    desc: 'Sodium-ion, iron-redox, and zinc-air architectures built entirely using domestic, non-critical raw material supply chains.',
-    tag: 'Atmanirbhar R&D',
+    code: 'INDIGENOUS',
+    title: 'Indigenous Battery Technologies',
+    desc: 'Using AI to advance indigenous battery technologies and innovation.',
+    tag: 'Indigenous Innovation',
     badgeColor: '#9b338f',
-    metricLabel: 'DOMESTIC SOURCING',
-    metricVal: '100% India',
     schematicType: 'chem'
   },
   {
     id: '08',
-    code: 'DEF-EMP',
-    title: 'National Security & Defense Storage',
-    subtitle: 'Sub-Zero Combat Packs & Tactical EMP Shielding',
-    desc: 'Sub-zero military drone propulsion, resilient combat vehicle packs, and tactical EMP-hardened energy repositories.',
-    tag: 'Strategic Defense',
+    code: 'OTHER',
+    title: 'Other Relevant Themes',
+    desc: 'Other relevant themes, including those related to the national security domain.',
+    tag: 'Open Theme',
     badgeColor: '#f94e2a',
-    metricLabel: 'OPERATING RANGE',
-    metricVal: '-40°C to +65°C',
     schematicType: 'defense'
   }
 ];
@@ -369,13 +345,13 @@ export default function ThemesGrid() {
       {/* Editorial Chapter Header */}
       <div className="themes-section__intro">
         <p className="article-block__chapter-label article-block__chapter-label--yellow">
-          01 / Core Problem Statements
+          01 / Hackathon Themes
         </p>
         <h2 className="article-block__heading">
-          Eight strategic domains shaping the next energy century.
+          Using AI to advance battery safety, sustainability, and indigenous innovation.
         </h2>
         <p className="themes-section__subhead">
-          Drag the suspended dossier line or use navigation arrows to explore all 8 official hackathon challenges. All submissions are benchmarked against these engineering pillars.
+          Drag the line or use the arrows to explore all 8 hackathon themes.
         </p>
       </div>
 
@@ -386,7 +362,7 @@ export default function ThemesGrid() {
         data-drag={dragging ? '1' : '0'}
         role="region"
         aria-roledescription="carousel"
-        aria-label="Hackathon Problem Statements Carousel"
+        aria-label="Hackathon Themes Carousel"
         tabIndex={0}
         onKeyDown={onKey}
         onPointerDown={onDown}
@@ -440,16 +416,10 @@ export default function ThemesGrid() {
                 {/* 2. Bold Editorial Heading */}
                 <h3 className="plc-print__title">{theme.title}</h3>
 
-                {/* 3. Target Metric Banner */}
-                <div className="plc-print__metric-line">
-                  <span className="plc-print__metric-label">{theme.metricLabel}:</span>
-                  <b className="plc-print__metric-val">{theme.metricVal}</b>
-                </div>
-
-                {/* 4. Full Explanatory Problem Statement Description */}
+                {/* 3. Theme Description */}
                 <p className="plc-print__desc">{theme.desc}</p>
 
-                {/* 5. Footer with Category Tag & Action Link */}
+                {/* 4. Footer with Category Tag & Action Link */}
                 <div className="plc-print__footer">
                   <span className="plc-print__category">
                     {theme.tag}
@@ -476,9 +446,6 @@ export default function ThemesGrid() {
                 style={{ background: activeTheme.badgeColor }}
               >
                 {activeTheme.id} / {activeTheme.tag}
-              </span>
-              <span className="plc-cap__metric">
-                BENCHMARK: <b>{activeTheme.metricVal}</b>
               </span>
             </div>
             <span className="plc-title">

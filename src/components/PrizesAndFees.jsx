@@ -3,37 +3,37 @@ import React from 'react';
 const BENEFITS = [
   {
     icon: '🏆',
-    title: 'Up to ₹2,00,000 Cash Prizes',
-    desc: 'Direct grant-style cash prize pool distributed across top category winners, alongside official national certificates.'
+    title: 'Up to ₹2 Lakh Cash Prizes',
+    desc: 'Attractive cash prizes and certificates for the winners, with up to ₹2 lakh in prize money.'
   },
   {
     icon: '🔬',
-    title: 'Pre-Finale Scientist Mentorship',
-    desc: 'Dedicated 1-on-1 weekly mentoring sessions with premier battery researchers, simulation engineers, and hardware builders.'
+    title: 'Mentoring Sessions',
+    desc: 'Mentoring sessions for shortlisted applicants before the Grand Finale.'
   },
   {
     icon: '🚀',
-    title: 'Incubation & Lab Access Opportunities',
-    desc: 'Fast-track incubation support, venture funding introductions, and access to advanced battery cycler & testing infrastructure.'
+    title: 'Incubation Opportunities',
+    desc: 'Incubation opportunities for participants.'
   }
 ];
 
 const FEE_TIERS = [
   {
-    tier: 'STUDENTS & SCHOLARS',
-    fee: '₹500',
-    desc: 'Enrolled undergraduate, postgraduate, and PhD scholars from accredited academic institutions.',
+    tier: 'STUDENTS & RESEARCH SCHOLARS',
+    fee: '₹500/-',
+    desc: 'For students and research scholars.',
   },
   {
     tier: 'STUDENT START-UPS',
-    fee: '₹1,500',
-    desc: 'Early-stage venture teams founded and driven by currently enrolled university students.',
+    fee: '₹1,500/-',
+    desc: 'For student start-ups with university/college-enrolled students.',
     highlight: true
   },
   {
-    tier: 'MSMEs & REGISTERED ENTITIES',
-    fee: '₹2,000',
-    desc: 'Registered micro, small, and medium enterprises, spin-offs, and commercial technology companies.',
+    tier: 'MSMEs & REGISTERED START-UPS',
+    fee: '₹2,000/-',
+    desc: 'For MSMEs and registered start-ups.',
   }
 ];
 
@@ -42,11 +42,11 @@ export default function PrizesAndFees() {
     <section className="fees-section" id="fees">
       <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto' }}>
         <p className="article-block__chapter-label article-block__chapter-label--yellow">
-          03 / Value & Investment
+          03 / Benefits & Fees
         </p>
-        <h2 className="article-block__heading">Prizes, Incubation & Registration Tiers</h2>
+        <h2 className="article-block__heading">Participant Benefits & Registration Fees</h2>
         <p style={{ color: 'var(--color-ink-muted)', fontSize: '1.05rem', lineHeight: 1.5, fontFamily: 'var(--font-body)' }}>
-          Transparent fee structure dedicated to fueling world-class jury evaluation, compute grants, and cash prize distribution.
+          Registration fee depends on your participant category.
         </p>
       </div>
 

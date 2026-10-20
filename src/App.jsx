@@ -14,10 +14,14 @@ import PrizesAndFees from './components/PrizesAndFees';
 import EvaluationSection from './components/EvaluationSection';
 import FAQSection from './components/FAQSection';
 import GroundForm from './components/GroundForm';
+import SitePreloader from './components/SitePreloader';
 
 export default function App() {
   return (
     <div className="page-shell">
+      {/* Intro preloader overlay (once per session) */}
+      <SitePreloader />
+
       {/* 3D WebGL Flight Canvas with Procedural Cloud Halftone Shader */}
       <FlightCanvas />
 
@@ -36,20 +40,20 @@ export default function App() {
           <ScrollRevealText
             as="p"
             className="article-intro__lead"
-            text="Intelligent Battery Cell 4.0 Hackathon 2026 brings together India's sharpest students, research scholars, deeptech startups, and MSMEs to develop innovative solutions for the future of battery technology."
+            text="Intelligent Battery Cell 4.0 Hackathon 2026 will bring participants together to develop innovative solutions for the future of battery technology."
             highlightWord="innovative"
           />
 
           <ScrollRevealText
             as="p"
             className="article-intro__copy"
-            text="The event is focused on using Artificial Intelligence to advance battery safety, sustainability, and indigenous innovation. From mitigating thermal runaway hazards in electric vehicles to building gigawatt-hour grid storage and extreme-climate defense energy systems, the era of passive chemical batteries is over."
+            text="The event is focused on using AI to advance battery safety, sustainability, and indigenous innovation."
           />
 
           <ScrollRevealText
             as="p"
             className="article-intro__copy"
-            text="Whether you are writing AI neural digital twin algorithms, engineering embedded firmware for edge BMS microcontrollers, testing sodium-ion cathode formulations, or designing circular second-life cascading models — this is the premier national platform to showcase your breakthrough."
+            text="Open to students and research scholars, student start-ups, and MSMEs and registered start-ups. Shortlisted applicants receive mentoring before the Grand Finale, with cash prizes of up to ₹2 lakh, certificates for the winners, and incubation opportunities for participants."
           />
         </div>
       </section>

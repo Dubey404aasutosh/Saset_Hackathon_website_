@@ -26,7 +26,9 @@ export default function AltitudeHud() {
       fluctuations.forEach(([time, val]) => {
         timeouts.push(
           window.setTimeout(() => {
-            if (window.scrollY <= 10) {
+            // The final "lock on live" step must always run, otherwise the
+            // readout freezes on a calibration value if the page scrolled meanwhile
+            if (val === null || window.scrollY <= 10) {
               setFlushedDisplay(val);
             }
           }, time)
@@ -36,10 +38,18 @@ export default function AltitudeHud() {
       setFlushedDisplay(null);
     }
 
-    const numberFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+    const stopCalibration = () => {
+      timeouts.forEach(t => clearTimeout(t));
+      timeouts.length = 0;
+      setFlushedDisplay(null);
+    };
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
+
+      // Any real scroll (incl. the browser restoring position on reload) ends the intro flicker
+      if (scrollY > 10 && timeouts.length) stopCalibration();
+
       const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
       const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
@@ -56,11 +66,14 @@ export default function AltitudeHud() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    // Page height changes (fonts, footer wordmark sizing) shift the scroll ratio too
+    window.addEventListener('resize', handleScroll);
     handleScroll();
 
     return () => {
       timeouts.forEach(t => clearTimeout(t));
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 

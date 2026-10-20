@@ -2818,6 +2818,22 @@ h6 {
   color: var(--color-ink);
 }
 
+.site-footer__credit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  transition: color 0.2s ease;
+}
+
+.site-footer__credit-link:hover,
+.site-footer__credit-link:focus-visible {
+  color: var(--color-red);
+}
+
 .site-footer__links {
   display: flex;
   flex-wrap: wrap;

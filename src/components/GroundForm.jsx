@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Github } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -98,7 +99,19 @@ export default function GroundForm() {
       {/* Footer */}
       <footer className="site-footer">
         <div className="site-footer__bar">
-          <p className="site-footer__credit">MADE BY DUBEYAASUTOSH</p>
+          <p className="site-footer__credit">
+            MADE BY{' '}
+            <a
+              href="https://github.com/Dubey404aasutosh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="site-footer__credit-link"
+              aria-label="DUBEYAASUTOSH on GitHub (opens in a new tab)"
+            >
+              <Github size={14} strokeWidth={2} aria-hidden="true" />
+              DUBEYAASUTOSH
+            </a>
+          </p>
           <nav className="site-footer__links" aria-label="Footer">
             {FOOTER_LINKS.map((link) => (
               <a key={link.href} href={link.href} className="site-footer__link">

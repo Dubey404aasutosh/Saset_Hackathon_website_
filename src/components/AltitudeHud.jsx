@@ -7,8 +7,6 @@ import React, { useState, useEffect } from 'react';
 export default function AltitudeHud() {
   const [elevation, setElevation] = useState(30000);
   const [flushedDisplay, setFlushedDisplay] = useState('30,000 FT');
-  const [voltage, setVoltage] = useState(4.20);
-  const [soc, setSoc] = useState(100);
 
   useEffect(() => {
     // Initial altimeter calibration fluctuation
@@ -57,10 +55,6 @@ export default function AltitudeHud() {
       const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
       setElevation(Math.round(30000 * (1 - ratio)));
-
-      // Battery Cell voltage: 4.20V down to 2.85V
-      setVoltage((4.20 - ratio * 1.35).toFixed(2));
-      setSoc(Math.round((1 - ratio) * 100));
     };
 
     // Coalesce scroll events into at most one update per frame
@@ -84,20 +78,15 @@ export default function AltitudeHud() {
   const numberFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
   return (
-    <aside className="altitude-hud" aria-label="Current story elevation & cell telemetry">
+    <aside className="altitude-hud" aria-label="Current story elevation">
       <div className="altitude-hud__track" aria-hidden="true">
-        <span style={{ transform: `scaleY(${soc / 100})` }} />
+        <span style={{ transform: `scaleY(${elevation / 30000})` }} />
       </div>
       <div className="altitude-hud__readout">
         <span className="altitude-hud__label">Altitude</span>
         <output className="altitude-hud__value">
           {flushedDisplay ?? `${numberFormatter.format(elevation)} FT`}
         </output>
-        <div className="altitude-hud__battery-gauge">
-          <span>⚡ {voltage}V</span>
-          <span>·</span>
-          <span>{soc}% SoC</span>
-        </div>
       </div>
     </aside>
   );
